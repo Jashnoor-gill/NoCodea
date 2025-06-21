@@ -186,7 +186,7 @@ const OpeningAnimation = ({ onComplete }) => {
             const targetIndex = index % logoPath.length;
             const target = logoPath[targetIndex];
             const targetX = centerX + (target.x - 0.5) * 300; // Increased size
-            const targetY = centerY + (target.y - 0.5) * 300; // Increased size
+            const targetY = centerY + (target.y - 0.5) * 300 - 50; // Move symbol up
 
             // Move towards target
             const dx = targetX - particle.x;
@@ -260,7 +260,7 @@ const OpeningAnimation = ({ onComplete }) => {
         className="animation-canvas"
       />
       <div className="loading-text">
-        <span className="neon-text">INITIALIZING</span>
+        <span className="neon-text">LOADING</span>
         <div className="loading-dots">
           <span></span>
           <span></span>

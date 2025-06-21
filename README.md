@@ -98,10 +98,11 @@ The opening animation creates a memorable first impression with:
 - **Scan Lines**: Authentic retro-futuristic feel
 
 ### Animation Sequence
-1. **Initialization**: "INITIALIZING" text with neon flicker
-2. **Particle Stream**: Particles flow from all directions
-3. **Logo Assembly**: Particles converge to form NC logo
-4. **Completion**: 2-second pause, then website transition
+1. **Loading**: "LOADING" text with neon flicker
+2. **Data Grid**: A futuristic grid materializes and rotates.
+3. **Particle System**: Data particles emerge and float around the scene.
+4. **Logo Assembly**: Particles converge to form NC logo
+5. **Completion**: 2-second pause, then website transition
 
 ## 📁 Project Structure
 
