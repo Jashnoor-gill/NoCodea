@@ -1,5 +1,8 @@
 import React from 'react';
 import { useDrop } from 'react-dnd';
+import sampleGallery1 from '../assets/photos/template-portfolio-hero.jpg';
+import sampleGallery2 from '../assets/photos/template-business-hero.jpg';
+import sampleGallery3 from '../assets/photos/template-restaurant-hero.jpg';
 
 const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) => {
   const renderElement = () => {
@@ -83,13 +86,7 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
       case 'image':
         return (
           <div className="space-y-2">
-            <div className="w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300">
-              <div className="text-center text-gray-500">
-                <div className="text-4xl mb-2">🖼️</div>
-                <p className="text-sm">Image Placeholder</p>
-                <p className="text-xs">Click to upload image</p>
-              </div>
-            </div>
+            <img src={sampleGallery1} alt="Sample" className="w-full h-48 object-cover rounded-lg border-2 border-gray-300" />
           </div>
         );
       
@@ -129,10 +126,8 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
         return (
           <div className="space-y-2">
             <div className="grid grid-cols-3 gap-4">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="h-24 bg-gray-200 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300">
-                  <span className="text-gray-500 text-sm">Image {i}</span>
-                </div>
+              {[sampleGallery1, sampleGallery2, sampleGallery3].map((img, i) => (
+                <img key={i} src={img} alt={`Gallery ${i+1}`} className="h-24 w-full object-cover rounded-lg border-2 border-gray-300" />
               ))}
             </div>
           </div>

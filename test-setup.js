@@ -15,7 +15,7 @@ console.log('- FRONTEND_URL:', process.env.FRONTEND_URL || 'Not set');
 async function testMongoDB() {
   try {
     console.log('\nTesting MongoDB connection...');
-    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/wvoo-builder');
+    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/nocodea-builder');
     console.log('✅ MongoDB connection successful!');
     await mongoose.connection.close();
   } catch (error) {

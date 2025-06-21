@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   CodeBracketIcon, 
   EyeIcon, 
@@ -9,40 +9,53 @@ import {
 } from '@heroicons/react/24/outline';
 
 const Editor = ({ onCodeChange, initialCode = '' }) => {
-  const [code, setCode] = useState(initialCode);
+  const [htmlCode, setHtmlCode] = useState(initialCode || '');
+  const [cssCode, setCssCode] = useState('');
+  const [jsCode, setJsCode] = useState('');
+  const [jsonCode, setJsonCode] = useState('');
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [language, setLanguage] = useState('html');
   const [theme, setTheme] = useState('dark');
+  const iframeRef = useRef(null);
 
   useEffect(() => {
     if (onCodeChange) {
-      onCodeChange(code);
+      if (language === 'html') onCodeChange(htmlCode);
+      else if (language === 'css') onCodeChange(cssCode);
+      else if (language === 'javascript') onCodeChange(jsCode);
+      else if (language === 'json') onCodeChange(jsonCode);
     }
-  }, [code, onCodeChange]);
+  }, [htmlCode, cssCode, jsCode, jsonCode, language]);
 
   const handleCodeChange = (e) => {
-    setCode(e.target.value);
+    const value = e.target.value;
+    if (language === 'html') setHtmlCode(value);
+    else if (language === 'css') setCssCode(value);
+    else if (language === 'javascript') setJsCode(value);
+    else if (language === 'json') setJsonCode(value);
   };
 
   const handleCopyCode = () => {
+    let code = '';
+    if (language === 'html') code = htmlCode;
+    else if (language === 'css') code = cssCode;
+    else if (language === 'javascript') code = jsCode;
+    else if (language === 'json') code = jsonCode;
     navigator.clipboard.writeText(code);
-    // You could add a toast notification here
   };
 
   const handleFormatCode = () => {
-    // Basic code formatting - you could integrate with prettier or similar
     try {
       if (language === 'json') {
-        const formatted = JSON.stringify(JSON.parse(code), null, 2);
-        setCode(formatted);
+        const formatted = JSON.stringify(JSON.parse(jsonCode), null, 2);
+        setJsonCode(formatted);
       } else if (language === 'html') {
-        // Basic HTML formatting
-        const formatted = code
+        const formatted = htmlCode
           .replace(/></g, '>\n<')
           .replace(/\n\s*\n/g, '\n')
           .trim();
-        setCode(formatted);
-      }
+        setHtmlCode(formatted);
+      } // Optionally add formatting for CSS/JS
     } catch (error) {
       console.error('Error formatting code:', error);
     }
@@ -51,7 +64,7 @@ const Editor = ({ onCodeChange, initialCode = '' }) => {
   const handleRunCode = () => {
     if (language === 'html') {
       const newWindow = window.open('', '_blank');
-      newWindow.document.write(code);
+      newWindow.document.write(buildPreviewHtml());
       newWindow.document.close();
     }
   };
@@ -86,8 +99,36 @@ const Editor = ({ onCodeChange, initialCode = '' }) => {
     };
   };
 
+  const buildPreviewHtml = () => {
+    return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Preview</title><style>${cssCode}</style></head><body>${htmlCode}<script>${jsCode}</script></body></html>`;
+  };
+
+  useEffect(() => {
+    if (isPreviewMode && iframeRef.current && (language !== 'json')) {
+      const doc = iframeRef.current.contentDocument;
+      doc.open();
+      doc.write(buildPreviewHtml());
+      doc.close();
+    }
+  }, [isPreviewMode, htmlCode, cssCode, jsCode, language]);
+
+  const getCurrentCode = () => {
+    if (language === 'html') return htmlCode;
+    if (language === 'css') return cssCode;
+    if (language === 'javascript') return jsCode;
+    if (language === 'json') return jsonCode;
+    return '';
+  };
+
+  const setCurrentCode = (value) => {
+    if (language === 'html') setHtmlCode(value);
+    else if (language === 'css') setCssCode(value);
+    else if (language === 'javascript') setJsCode(value);
+    else if (language === 'json') setJsonCode(value);
+  };
+
   return (
-    <div className="editor bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
+    <div className="editor bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden w-full">
       {/* Editor Header */}
       <div className="bg-gray-50 border-b border-gray-200 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center space-x-4">
@@ -166,15 +207,15 @@ const Editor = ({ onCodeChange, initialCode = '' }) => {
       </div>
 
       {/* Editor Content */}
-      <div className="flex h-96">
+      <div className="flex h-[80vh] min-h-[400px] w-full">
         {/* Code Editor */}
-        <div className={`flex-1 ${isPreviewMode ? 'w-1/2' : 'w-full'} transition-all duration-300`}>
+        <div className={`flex-1 ${isPreviewMode ? 'w-1/2' : 'w-full'} transition-all duration-300 h-full`}>
           <div className="relative h-full">
             <textarea
-              value={code}
+              value={getCurrentCode()}
               onChange={handleCodeChange}
               placeholder={`Enter your ${language.toUpperCase()} code here...`}
-              className="w-full h-full p-4 font-mono text-sm resize-none focus:outline-none"
+              className="w-full h-full p-4 pl-12 font-mono text-sm resize-none focus:outline-none"
               style={getThemeStyles()}
               spellCheck="false"
             />
@@ -184,7 +225,7 @@ const Editor = ({ onCodeChange, initialCode = '' }) => {
               className="absolute top-0 left-0 w-12 h-full p-4 font-mono text-xs text-gray-400 select-none pointer-events-none"
               style={{ backgroundColor: theme === 'dark' ? '#2d2d2d' : '#f8f9fa' }}
             >
-              {code.split('\n').map((_, index) => (
+              {getCurrentCode().split('\n').map((_, index) => (
                 <div key={index} className="text-right">
                   {index + 1}
                 </div>
@@ -195,30 +236,32 @@ const Editor = ({ onCodeChange, initialCode = '' }) => {
 
         {/* Preview Panel */}
         {isPreviewMode && (
-          <div className="w-1/2 border-l border-gray-200 bg-white">
+          <div className="flex-1 border-l border-gray-200 bg-white h-full">
             <div className="p-4 border-b border-gray-200 bg-gray-50">
               <h4 className="text-sm font-medium text-gray-700">Preview</h4>
             </div>
             <div className="p-4 h-full overflow-auto">
-              {language === 'html' ? (
-                <div 
-                  dangerouslySetInnerHTML={{ __html: code }}
-                  className="min-h-full"
-                />
-              ) : language === 'css' ? (
+              {language === 'json' ? (
                 <div className="space-y-4">
-                  <div className="text-sm text-gray-600 mb-2">CSS Preview:</div>
+                  <div className="text-sm text-gray-600 mb-2">JSON Preview:</div>
                   <pre className="text-xs bg-gray-100 p-2 rounded overflow-auto">
-                    {code}
+                    {(() => {
+                      try {
+                        return JSON.stringify(JSON.parse(jsonCode), null, 2);
+                      } catch {
+                        return jsonCode;
+                      }
+                    })()}
                   </pre>
                 </div>
               ) : (
-                <div className="space-y-4">
-                  <div className="text-sm text-gray-600 mb-2">Code Output:</div>
-                  <pre className="text-xs bg-gray-100 p-2 rounded overflow-auto">
-                    {code}
-                  </pre>
-                </div>
+                <iframe
+                  ref={iframeRef}
+                  title="Live Preview"
+                  className="w-full h-80 bg-white border rounded"
+                  sandbox="allow-scripts allow-same-origin"
+                  style={{ minHeight: '320px', height: '100%' }}
+                />
               )}
             </div>
           </div>
@@ -230,9 +273,9 @@ const Editor = ({ onCodeChange, initialCode = '' }) => {
         <div className="flex items-center space-x-4 text-sm text-gray-500">
           <span>{getLanguageIcon()} {language.toUpperCase()}</span>
           <span>•</span>
-          <span>{code.length} characters</span>
+          <span>{getCurrentCode().length} characters</span>
           <span>•</span>
-          <span>{code.split('\n').length} lines</span>
+          <span>{getCurrentCode().split('\n').length} lines</span>
         </div>
         
         <div className="text-sm text-gray-500">

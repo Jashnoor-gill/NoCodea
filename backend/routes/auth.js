@@ -257,11 +257,11 @@ router.post('/forgot-password', [
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
-      subject: 'Password Reset Request - WVOO Website Builder',
+      subject: 'Password Reset Request - NoCodea Website Builder',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; text-align: center; color: white;">
-            <h1 style="margin: 0; font-size: 24px;">WVOO Website Builder</h1>
+            <h1 style="margin: 0; font-size: 24px;">NoCodea Website Builder</h1>
             <p style="margin: 10px 0 0 0; opacity: 0.9;">Password Reset Request</p>
           </div>
           
@@ -269,7 +269,7 @@ router.post('/forgot-password', [
             <h2 style="color: #333; margin-bottom: 20px;">Hello ${user.name},</h2>
             
             <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
-              You requested a password reset for your WVOO Website Builder account. 
+              You requested a password reset for your NoCodea Website Builder account. 
               Click the button below to reset your password:
             </p>
             
@@ -300,7 +300,7 @@ router.post('/forgot-password', [
           
           <div style="background: #333; padding: 20px; text-align: center; color: white;">
             <p style="margin: 0; font-size: 14px; opacity: 0.8;">
-              © 2024 WVOO Website Builder. All rights reserved.
+              © 2024 NoCodea Website Builder. All rights reserved.
             </p>
           </div>
         </div>

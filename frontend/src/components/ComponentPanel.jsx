@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
 import { useDrag } from 'react-dnd';
+import buttonIcon from '../assets/icons/component-button.png';
+import columnsIcon from '../assets/icons/component-columns.png';
+import formIcon from '../assets/icons/component-form.png';
+import galleryIcon from '../assets/icons/component-gallery.png';
+import imageIcon from '../assets/icons/component-image.png';
+import mapIcon from '../assets/icons/component-map.png';
+import navigationIcon from '../assets/icons/component-navigation.png';
+import textIcon from '../assets/icons/component-text.png';
+import videoIcon from '../assets/icons/component-video.png';
 
 const DraggableComponent = ({ type, label, icon, description, category }) => {
   const [{ isDragging }, drag] = useDrag({
@@ -36,31 +45,29 @@ const ComponentPanel = () => {
   const categories = {
     basic: {
       name: 'Basic Inputs',
-      icon: '📝',
+      icon: <img src={textIcon} alt="Text" className="w-5 h-5 inline-block" />,
       components: [
-        { type: 'text', label: 'Text Input', icon: '📝', description: 'Single line text input' },
-        { type: 'email', label: 'Email Input', icon: '📧', description: 'Email address input' },
-        { type: 'number', label: 'Number Input', icon: '🔢', description: 'Numeric input field' },
-        { type: 'textarea', label: 'Text Area', icon: '📄', description: 'Multi-line text input' },
+        { type: 'text', label: 'Text Input', icon: <img src={textIcon} alt="Text" className="w-6 h-6" />, description: 'Single line text input' },
+        { type: 'button', label: 'Button', icon: <img src={buttonIcon} alt="Button" className="w-6 h-6" />, description: 'Clickable button' },
+        { type: 'form', label: 'Form', icon: <img src={formIcon} alt="Form" className="w-6 h-6" />, description: 'Form container' },
+        { type: 'columns', label: 'Columns', icon: <img src={columnsIcon} alt="Columns" className="w-6 h-6" />, description: 'Multi-column layout' },
       ]
     },
     selection: {
       name: 'Selection',
       icon: '☑️',
       components: [
-        { type: 'select', label: 'Dropdown', icon: '📋', description: 'Select from options' },
-        { type: 'checkbox', label: 'Checkbox', icon: '☑️', description: 'Multiple choice option' },
-        { type: 'radio', label: 'Radio Button', icon: '🔘', description: 'Single choice option' },
+        { type: 'gallery', label: 'Gallery', icon: <img src={galleryIcon} alt="Gallery" className="w-6 h-6" />, description: 'Image gallery' },
+        { type: 'image', label: 'Image', icon: <img src={imageIcon} alt="Image" className="w-6 h-6" />, description: 'Single image' },
+        { type: 'video', label: 'Video', icon: <img src={videoIcon} alt="Video" className="w-6 h-6" />, description: 'Video player' },
+        { type: 'map', label: 'Map', icon: <img src={mapIcon} alt="Map" className="w-6 h-6" />, description: 'Map embed' },
       ]
     },
     advanced: {
       name: 'Advanced',
-      icon: '⚙️',
+      icon: <img src={navigationIcon} alt="Navigation" className="w-5 h-5 inline-block" />,
       components: [
-        { type: 'date', label: 'Date Picker', icon: '📅', description: 'Date selection' },
-        { type: 'time', label: 'Time Picker', icon: '🕐', description: 'Time selection' },
-        { type: 'file', label: 'File Upload', icon: '📁', description: 'File upload field' },
-        { type: 'url', label: 'URL Input', icon: '🔗', description: 'Website URL input' },
+        { type: 'navigation', label: 'Navigation', icon: <img src={navigationIcon} alt="Navigation" className="w-6 h-6" />, description: 'Navigation bar' },
       ]
     }
   };

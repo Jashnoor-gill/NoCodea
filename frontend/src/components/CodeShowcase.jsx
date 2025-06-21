@@ -7,7 +7,7 @@ import {
   CpuChipIcon
 } from '@heroicons/react/24/outline';
 
-const CodeShowcase = () => {
+const CodeShowcase = ({ onTryEditor }) => {
   const [activeTab, setActiveTab] = useState('html');
   const [codeSnippets] = useState({
     html: `<!DOCTYPE html>
@@ -322,7 +322,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         {/* Call to Action */}
         <div className="text-center mt-16">
-          <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+          <button
+            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+            onClick={onTryEditor}
+          >
             Try the Editor Now
           </button>
         </div>

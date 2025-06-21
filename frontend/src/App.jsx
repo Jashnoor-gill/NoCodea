@@ -13,6 +13,8 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import ResetPassword from './components/auth/ResetPassword';
+import Editor from './components/Editor';
+import OpeningAnimation from './components/OpeningAnimation';
 import './App.css';
 
 function AppContent() {
@@ -26,8 +28,9 @@ function AppContent() {
   const [showRegister, setShowRegister] = useState(false);
   const [showResetPassword, setShowResetPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showOpeningAnimation, setShowOpeningAnimation] = useState(true);
 
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, handleOAuthCallback } = useAuth();
 
   // Check for reset password token in URL
   useEffect(() => {
@@ -38,6 +41,23 @@ function AppContent() {
       setCurrentPage('landing');
     }
   }, []);
+
+  // Google OAuth callback handler
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (url.pathname === '/auth/callback') {
+      const token = url.searchParams.get('token');
+      if (token) {
+        handleOAuthCallback(token);
+        window.history.replaceState({}, document.title, '/'); // Clean up URL
+        setCurrentPage('dashboard');
+      }
+    }
+  }, []);
+
+  const handleOpeningAnimationComplete = () => {
+    setShowOpeningAnimation(false);
+  };
 
   const handleUpdateElement = (updatedElement) => {
     setFormElements(prev => 
@@ -182,28 +202,60 @@ function AppContent() {
     setShowResetPassword(false);
   };
 
+  const handleTryEditor = () => {
+    setCurrentPage('editor');
+  };
+
   // Render Landing Page
   if (currentPage === 'landing') {
     return (
       <>
-        <LandingPage onGetStarted={handleGetStarted} />
-        {showLogin && (
-          <Login 
-            onClose={handleCloseAuth}
-            onSwitchToRegister={handleSwitchToRegister}
-          />
+        {showOpeningAnimation && (
+          <OpeningAnimation onComplete={handleOpeningAnimationComplete} />
         )}
-        {showRegister && (
-          <Register 
-            onClose={handleCloseAuth}
-            onSwitchToLogin={handleSwitchToLogin}
-          />
+        {!showOpeningAnimation && (
+          <>
+            <LandingPage onGetStarted={handleGetStarted} onTryEditor={handleTryEditor} />
+            {showLogin && (
+              <Login 
+                onClose={handleCloseAuth}
+                onSwitchToRegister={handleSwitchToRegister}
+              />
+            )}
+            {showRegister && (
+              <Register 
+                onClose={handleCloseAuth}
+                onSwitchToLogin={handleSwitchToLogin}
+              />
+            )}
+            {showResetPassword && (
+              <ResetPassword 
+                onClose={handleCloseAuth}
+                onSwitchToLogin={handleSwitchToLogin}
+              />
+            )}
+          </>
         )}
-        {showResetPassword && (
-          <ResetPassword 
-            onClose={handleCloseAuth}
-            onSwitchToLogin={handleSwitchToLogin}
-          />
+      </>
+    );
+  }
+
+  if (currentPage === 'editor') {
+    return (
+      <>
+        {showOpeningAnimation && (
+          <OpeningAnimation onComplete={handleOpeningAnimationComplete} />
+        )}
+        {!showOpeningAnimation && (
+          <div className="min-h-screen w-full bg-gray-100 flex flex-col items-center justify-center p-8">
+            <Editor />
+            <button
+              className="mt-8 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300"
+              onClick={() => setCurrentPage('landing')}
+            >
+              Back to Home
+            </button>
+          </div>
         )}
       </>
     );
@@ -212,100 +264,116 @@ function AppContent() {
   // Render Dashboard
   if (currentPage === 'dashboard') {
     return (
-      <Dashboard 
-        onOpenProject={handleOpenProject}
-        onCreateProject={() => setCurrentPage('builder')}
-      />
+      <>
+        {showOpeningAnimation && (
+          <OpeningAnimation onComplete={handleOpeningAnimationComplete} />
+        )}
+        {!showOpeningAnimation && (
+          <div className="w-full min-h-screen bg-gray-50">
+            <Dashboard 
+              onOpenProject={handleOpenProject}
+              onCreateProject={() => setCurrentPage('builder')}
+            />
+          </div>
+        )}
+      </>
     );
   }
 
   // Render Website Builder
   return (
-    <DndProvider backend={HTML5Backend}>
-      <div className="App h-screen flex flex-col bg-gray-50">
-        {/* Header */}
-        <header className="bg-white border-b border-gray-200 shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-16">
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">WB</span>
+    <>
+      {showOpeningAnimation && (
+        <OpeningAnimation onComplete={handleOpeningAnimationComplete} />
+      )}
+      {!showOpeningAnimation && (
+        <DndProvider backend={HTML5Backend}>
+          <div className="App h-screen flex flex-col bg-gray-50 w-full">
+            {/* Header */}
+            <header className="bg-white border-b border-gray-200 shadow-sm w-full">
+              <div className="w-full px-4 sm:px-6 lg:px-8">
+                <div className="flex items-center justify-between h-16 w-full">
+                  <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                        <span className="text-white font-bold text-sm">WB</span>
+                      </div>
+                      <h1 className="text-xl font-bold text-gray-900">Website Builder</h1>
+                      {currentProject && (
+                        <span className="text-sm text-gray-500">- {currentProject.name}</span>
+                      )}
+                    </div>
                   </div>
-                  <h1 className="text-xl font-bold text-gray-900">Website Builder</h1>
-                  {currentProject && (
-                    <span className="text-sm text-gray-500">- {currentProject.name}</span>
-                  )}
+                  
+                  <div className="flex items-center space-x-4">
+                    <button
+                      onClick={handleBackToLanding}
+                      className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                    >
+                      Back to Dashboard
+                    </button>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm text-gray-500">Welcome,</span>
+                      <span className="text-sm font-medium text-gray-900">{user?.name}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-              
-              <div className="flex items-center space-x-4">
-                <button
-                  onClick={handleBackToLanding}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  Back to Dashboard
-                </button>
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm text-gray-500">Welcome,</span>
-                  <span className="text-sm font-medium text-gray-900">{user?.name}</span>
+            </header>
+
+            {/* Main Content */}
+            <div className="flex-1 flex w-full">
+              {/* Component Panel */}
+              <div className="w-80 bg-white border-r border-gray-200">
+                <ComponentPanel />
+              </div>
+
+              {/* Canvas */}
+              <div className="flex-1 flex flex-col">
+                <Toolbar
+                  onSave={handleSaveWebsite}
+                  onLoad={handleLoadWebsite}
+                  onClear={handleClearWebsite}
+                  onExport={handleExportWebsite}
+                  onImport={handleImportWebsite}
+                  onPreview={() => setIsPreviewMode(!isPreviewMode)}
+                  isPreviewMode={isPreviewMode}
+                  loading={loading}
+                />
+                
+                <div className="flex-1 overflow-auto p-6 w-full">
+                  <Canvas
+                    formElements={formElements}
+                    setFormElements={setFormElements}
+                    selectedElement={selectedElement}
+                    setSelectedElement={setSelectedElement}
+                    isPreviewMode={isPreviewMode}
+                  />
                 </div>
               </div>
+
+              {/* Property Panel */}
+              {selectedElement && !isPreviewMode && (
+                <div className="w-80 bg-white border-l border-gray-200">
+                  <PropertyPanel
+                    element={selectedElement}
+                    onUpdate={handleUpdateElement}
+                  />
+                </div>
+              )}
             </div>
-          </div>
-        </header>
 
-        {/* Main Content */}
-        <div className="flex-1 flex">
-          {/* Component Panel */}
-          <div className="w-80 bg-white border-r border-gray-200">
-            <ComponentPanel />
-          </div>
-
-          {/* Canvas */}
-          <div className="flex-1 flex flex-col">
-            <Toolbar
-              onSave={handleSaveWebsite}
-              onLoad={handleLoadWebsite}
-              onClear={handleClearWebsite}
-              onExport={handleExportWebsite}
-              onImport={handleImportWebsite}
-              onPreview={() => setIsPreviewMode(!isPreviewMode)}
-              isPreviewMode={isPreviewMode}
-              loading={loading}
-            />
-            
-            <div className="flex-1 overflow-auto p-6">
-              <Canvas
-                formElements={formElements}
-                setFormElements={setFormElements}
-                selectedElement={selectedElement}
-                setSelectedElement={setSelectedElement}
-                isPreviewMode={isPreviewMode}
+            {/* Template Gallery Modal */}
+            {showTemplates && (
+              <TemplateGallery
+                onSelectTemplate={handleSelectTemplate}
+                onClose={() => setShowTemplates(false)}
               />
-            </div>
+            )}
           </div>
-
-          {/* Property Panel */}
-          {selectedElement && !isPreviewMode && (
-            <div className="w-80 bg-white border-l border-gray-200">
-              <PropertyPanel
-                element={selectedElement}
-                onUpdate={handleUpdateElement}
-              />
-            </div>
-          )}
-        </div>
-
-        {/* Template Gallery Modal */}
-        {showTemplates && (
-          <TemplateGallery
-            onSelectTemplate={handleSelectTemplate}
-            onClose={() => setShowTemplates(false)}
-          />
-        )}
-      </div>
-    </DndProvider>
+        </DndProvider>
+      )}
+    </>
   );
 }
 
