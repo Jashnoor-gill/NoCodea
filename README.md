@@ -1,279 +1,158 @@
-# 🚀 NoCodea Website Builder - Complete No-Code Platform
+# 🚀 NoCode Builder - Website Builder Platform
 
-A modern, feature-rich website builder with drag-and-drop functionality, real-time preview, and powerful code editing capabilities. Built with React, Node.js, and MongoDB.
+A powerful drag-and-drop website builder with a stunning cyberpunk opening animation featuring the NC logo formation.
 
 ## ✨ Features
 
-### 🎨 **Frontend (React + Vite)**
-- **Stunning Landing Page**: Modern dark theme with cosmic background effects
-- **Advanced Code Editor**: Multi-language support (HTML, CSS, JS, JSON) with live preview
-- **Drag & Drop Interface**: Visual website building with real-time updates
-- **Component Library**: Pre-built components for quick development
-- **Responsive Design**: Mobile-first approach with adaptive layouts
-- **Authentication System**: JWT + Google OAuth integration
-- **Template System**: Pre-designed website templates
-- **Project Management**: Create, save, and manage multiple projects
-- **Export/Import**: Save and load website projects
+### 🎬 Opening Animation
+- **Cyberpunk Style**: Neon green/purple theme with glowing particles
+- **NC Logo Formation**: Particles stream in from all sides to form your NC logo
+- **Tech Vibe**: AI/Data Science aesthetic with flickering code lines
+- **Smooth Transitions**: Seamless integration with your website
 
-### 🔧 **Backend (Node.js + Express)**
-- **RESTful API**: Comprehensive endpoints for all functionality
-- **MongoDB Integration**: Scalable database with Mongoose ODM
-- **JWT Authentication**: Secure token-based authentication
-- **Google OAuth**: Social login integration
-- **File Upload**: Image and asset management
-- **Rate Limiting**: API protection and security
-- **Error Handling**: Comprehensive error management
-- **Email System**: Password reset functionality
+### 🛠️ Core Features
+- **Drag & Drop Builder**: Intuitive interface for creating websites
+- **Component Library**: Rich collection of pre-built components
+- **Template Gallery**: Professional templates for various use cases
+- **Real-time Preview**: See changes instantly as you build
+- **Responsive Design**: Mobile-first approach
+- **Authentication System**: User registration and login
+- **Project Management**: Save, load, and manage multiple projects
 
-### 🗄️ **Database (MongoDB)**
-- **User Management**: Complete user profiles and preferences
-- **Project Storage**: Website projects with versioning
-- **Template Library**: Reusable website templates
-- **Collaboration**: Multi-user project sharing
-- **Analytics**: Usage tracking and statistics
+### 🎨 Design System
+- **Modern UI**: Clean, professional interface
+- **Dark Theme**: Easy on the eyes
+- **3D Effects**: Engaging visual elements
+- **Animations**: Smooth transitions and interactions
 
-## 🛠️ Technology Stack
+## 🏗️ Architecture
 
-### Frontend
-- **React 18** - Modern React with hooks
-- **Vite** - Fast build tool and dev server
-- **Tailwind CSS** - Utility-first CSS framework
-- **Heroicons** - Beautiful SVG icons
-- **React DnD** - Drag and drop functionality
-- **Axios** - HTTP client for API calls
-- **React Router** - Client-side routing
+### Frontend (React + Vite)
+- **React 18**: Latest React features
+- **Vite**: Fast development and build
+- **Tailwind CSS**: Utility-first styling
+- **Canvas API**: Custom animations
+- **React DnD**: Drag and drop functionality
 
-### Backend
-- **Node.js** - JavaScript runtime
-- **Express.js** - Web framework
-- **MongoDB** - NoSQL database
-- **Mongoose** - MongoDB ODM
-- **JWT** - JSON Web Tokens
-- **Passport.js** - Authentication middleware
-- **Multer** - File upload handling
-- **bcryptjs** - Password hashing
-- **Nodemailer** - Email sending
+### Backend (Node.js + Express)
+- **Express.js**: RESTful API
+- **SQLite**: Lightweight database
+- **JWT**: Authentication
+- **Multer**: File uploads
+- **CORS**: Cross-origin support
 
-## 📦 Installation & Setup
+## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js (v18 or higher)
-- MongoDB (local or Atlas)
-- Git
+- Node.js (v16 or higher)
+- npm or yarn
 
-### 1. Clone the Repository
-```bash
-git clone <repository-url>
-cd nocode_builder
-```
+### Installation
 
-### 2. Backend Setup
-```bash
-cd backend
-
-# Install dependencies
-npm install
-
-# Create environment file
-cp env.example .env
-
-# Edit .env with your configuration
-# Update MongoDB URI, JWT secret, etc.
-```
-
-### 3. Frontend Setup
-```bash
-cd frontend
-
-# Install dependencies
-npm install
-```
-
-### 4. Database Setup
-```bash
-# If using local MongoDB
-mongod
-
-# Or use MongoDB Atlas (cloud)
-# Update MONGODB_URI in backend/.env
-```
-
-## 🔧 Configuration
-
-### Environment Variables (Backend)
-
-Create a `.env` file in the `backend` directory:
-
-```env
-# Server Configuration
-PORT=5000
-NODE_ENV=development
-
-# MongoDB Configuration
-MONGODB_URI=mongodb://localhost:27017/wvoo-builder
-MONGODB_URI_PROD=mongodb+srv://username:password@cluster.mongodb.net/wvoo-builder
-
-# JWT Configuration
-JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
-JWT_EXPIRE=7d
-
-# Google OAuth (Optional)
-GOOGLE_CLIENT_ID=your-google-client-id
-GOOGLE_CLIENT_SECRET=your-google-client-secret
-GOOGLE_CALLBACK_URL=http://localhost:5000/api/auth/google/callback
-
-# Cloudinary Configuration (for image uploads)
-CLOUDINARY_CLOUD_NAME=your-cloud-name
-CLOUDINARY_API_KEY=your-api-key
-CLOUDINARY_API_SECRET=your-api-secret
-
-# Email Configuration (for password reset)
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_USER=your-email@gmail.com
-EMAIL_PASS=your-app-password
-
-# Frontend URL (for CORS)
-FRONTEND_URL=http://localhost:5173
-
-# Rate Limiting
-RATE_LIMIT_WINDOW_MS=900000
-RATE_LIMIT_MAX_REQUESTS=100
-```
-
-## 🚀 Quick Start
-
-### Option 1: Using Scripts (Recommended)
-
-**Windows:**
-```bash
-# Double-click start-dev.bat
-# OR run in PowerShell:
-.\start-dev.ps1
-```
-
-**Manual Start:**
-```bash
-# Terminal 1 - Backend
-cd backend
-npm run dev
-
-# Terminal 2 - Frontend
-cd frontend
-npm run dev
-```
-
-### Option 2: Manual Start
-
-1. **Start Backend Server**
+1. **Clone the repository**
    ```bash
+   git clone <your-repo-url>
+   cd nocode_builder
+   ```
+
+2. **Install dependencies**
+   ```bash
+   # Install backend dependencies
    cd backend
-   npm run dev
+   npm install
+   
+   # Install frontend dependencies
+   cd ../frontend
+   npm install
    ```
-   Server will run on: `http://localhost:5000`
 
-2. **Start Frontend Development Server**
+3. **Environment Setup**
    ```bash
-   cd frontend
+   # Copy environment example
+   cd ../backend
+   cp env.example .env
+   ```
+
+4. **Start Development Servers**
+   ```bash
+   # Start backend (from backend directory)
+   npm run dev
+   
+   # Start frontend (from frontend directory)
    npm run dev
    ```
-   Frontend will run on: `http://localhost:5173`
 
-3. **Access the Application**
-   - Open `http://localhost:5173` in your browser
-   - You'll see the stunning landing page
-   - Click "Free Download!" or "Start Building Now" to access the builder
+5. **Access the Application**
+   - Frontend: http://localhost:5173
+   - Backend API: http://localhost:5000
 
-## 🎯 Using the Website Builder
+## 🎬 Opening Animation Details
 
-### 1. Authentication
-- Register a new account or login with existing credentials
-- Google OAuth is also available
-- Forgot password functionality is implemented
+The opening animation creates a memorable first impression with:
 
-### 2. Creating a Website
-- Choose from available templates or start from scratch
-- Drag and drop components from the component panel
-- Edit properties in the property panel
-- Preview your website in real-time
+- **300 Glowing Particles**: Stream in from all screen edges
+- **NC Logo Formation**: Particles assemble to form your brand logo
+- **Cyberpunk Aesthetic**: Neon green (#00ff41) and purple (#bf00ff) theme
+- **Tech Background**: Flickering code lines with AI/blockchain themes
+- **Grid Overlay**: Animated cyberpunk grid effect
+- **Scan Lines**: Authentic retro-futuristic feel
 
-### 3. Available Components
-- **Layout**: Container, Row, Column, Section, Divider, Spacer
-- **Content**: Heading, Paragraph, Image, Video, Button, Link
-- **Forms**: Text, Email, Number, Textarea, Select, Checkbox, Radio, Date, File
-- **Media**: Gallery, Carousel, Map, Social Links
-- **Advanced**: Navigation, Footer, Sidebar, Card, Testimonial, Pricing
-
-### 4. Code Editor
-- Switch to code view for advanced editing
-- Support for HTML, CSS, JavaScript, and JSON
-- Live preview of code changes
-- Syntax highlighting and formatting
-
-### 5. Saving & Exporting
-- Save your projects to the cloud
-- Export as JSON files
-- Import existing projects
-- Share projects with collaborators
+### Animation Sequence
+1. **Initialization**: "INITIALIZING" text with neon flicker
+2. **Particle Stream**: Particles flow from all directions
+3. **Logo Assembly**: Particles converge to form NC logo
+4. **Completion**: 2-second pause, then website transition
 
 ## 📁 Project Structure
 
 ```
 nocode_builder/
-├── frontend/                 # React frontend application
+├── frontend/                 # React frontend
 │   ├── src/
 │   │   ├── components/       # React components
-│   │   │   ├── auth/         # Authentication components
-│   │   │   ├── LandingPage.jsx
-│   │   │   ├── Editor.jsx
+│   │   │   ├── OpeningAnimation.jsx    # Main animation
+│   │   │   ├── OpeningAnimation.css    # Animation styles
 │   │   │   └── ...
-│   │   ├── contexts/         # React contexts
-│   │   │   └── AuthContext.jsx
-│   │   ├── services/         # API services
-│   │   ├── utils/            # Utility functions
-│   │   └── App.jsx           # Main application
-│   ├── package.json
-│   └── README.md
-├── backend/                  # Node.js backend application
-│   ├── models/               # MongoDB models
-│   │   ├── User.js
-│   │   ├── Project.js
-│   │   └── Template.js
-│   ├── routes/               # API routes
-│   │   ├── auth.js
-│   │   ├── projects.js
-│   │   ├── templates.js
-│   │   └── upload.js
-│   ├── middleware/           # Custom middleware
-│   ├── utils/                # Utility functions
-│   ├── server.js             # Main server file
-│   ├── package.json
-│   └── README.md
-├── start-dev.bat            # Windows startup script
-├── start-dev.ps1            # PowerShell startup script
-└── README.md                # This file
+│   │   ├── assets/          # Images, icons, animations
+│   │   └── ...
+│   └── package.json
+├── backend/                  # Node.js backend
+│   ├── routes/              # API routes
+│   ├── models/              # Database models
+│   ├── middleware/          # Custom middleware
+│   └── ...
+└── README.md
 ```
 
-## 🔒 Security Features
+## 🛠️ Development
 
-- **JWT Authentication**: Secure token-based authentication
-- **Password Hashing**: bcryptjs for password security
-- **Rate Limiting**: API protection against abuse
-- **CORS Configuration**: Proper cross-origin resource sharing
-- **Input Validation**: Comprehensive validation on all inputs
-- **Error Handling**: Secure error responses
+### Adding New Components
+1. Create component in `frontend/src/components/`
+2. Add to `ComponentPanel.jsx`
+3. Update `Canvas.jsx` for rendering
+4. Add properties to `PropertyPanel.jsx`
+
+### Customizing Animation
+- Modify `OpeningAnimation.jsx` for particle behavior
+- Update `logoPath` array for different logo shapes
+- Adjust colors in `OpeningAnimation.css`
+- Change timing in animation functions
 
 ## 🚀 Deployment
 
-### Backend Deployment
-1. Set up MongoDB Atlas or local MongoDB
-2. Configure environment variables for production
-3. Deploy to Heroku, Vercel, or your preferred platform
+### Frontend (Vercel/Netlify)
+```bash
+cd frontend
+npm run build
+# Deploy dist/ folder
+```
 
-### Frontend Deployment
-1. Build the production version: `npm run build`
-2. Deploy to Vercel, Netlify, or your preferred platform
-3. Update API endpoints to production URLs
+### Backend (Railway/Render)
+```bash
+cd backend
+# Set environment variables
+npm start
+```
 
 ## 🤝 Contributing
 
@@ -283,38 +162,17 @@ nocode_builder/
 4. Test thoroughly
 5. Submit a pull request
 
-## 📝 License
+## 📄 License
 
 This project is licensed under the MIT License.
 
-## 🆘 Support
+## 🙏 Acknowledgments
 
-If you encounter any issues:
-
-1. Check the console for error messages
-2. Ensure MongoDB is running
-3. Verify all environment variables are set
-4. Check that both servers are running on correct ports
-
-## 🎉 What's New
-
-### Latest Updates
-- ✅ Complete website building components
-- ✅ Password reset functionality
-- ✅ Project management system
-- ✅ Drag & drop interface
-- ✅ Real-time preview
-- ✅ Export/Import functionality
-- ✅ Responsive design
-- ✅ Authentication system
-
-### Coming Soon
-- 🔄 Advanced code editor
-- 🔄 Template marketplace
-- 🔄 Collaboration features
-- 🔄 Analytics dashboard
-- 🔄 Custom domain support
+- React team for the amazing framework
+- Vite for the fast build tool
+- Tailwind CSS for the utility-first approach
+- Canvas API for the animation capabilities
 
 ---
 
-**Happy Building! 🚀** 
+**Built with ❤️ by NC Team** 
