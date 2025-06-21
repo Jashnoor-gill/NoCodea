@@ -15,6 +15,7 @@ import Register from './components/auth/Register';
 import ResetPassword from './components/auth/ResetPassword';
 import Editor from './components/Editor';
 import OpeningAnimation from './components/OpeningAnimation';
+import LoadingWave from './components/LoadingWave';
 import './App.css';
 
 function AppContent() {
@@ -283,6 +284,7 @@ function AppContent() {
   // Render Website Builder
   return (
     <>
+      {loading && <LoadingWave />}
       {showOpeningAnimation && (
         <OpeningAnimation onComplete={handleOpeningAnimationComplete} />
       )}

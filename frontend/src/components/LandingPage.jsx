@@ -1,21 +1,27 @@
 import React, { useState, useRef } from 'react';
 import { 
   UserIcon, 
-  ShoppingCartIcon, 
   MagnifyingGlassIcon,
   ChevronDownIcon,
   Bars3Icon,
   XMarkIcon,
   ShieldCheckIcon,
   WrenchScrewdriverIcon,
-  LockClosedIcon,
-  FlagIcon
+  LockClosedIcon
 } from '@heroicons/react/24/outline';
 import CodeShowcase from './CodeShowcase';
 import Hero3DBackground from './Hero3DBackground';
 import landingHero from '../assets/illustrations/landing-website-builder.png';
 import featureAnalytics from '../assets/illustrations/feature-analytics.png';
 import featureDragDrop from '../assets/illustrations/feature-drag-drop.png';
+import featureCloudStorage from '../assets/illustrations/feature-cloud-storage.png';
+import featureCollaboration from '../assets/illustrations/feature-collaboration.png';
+import featureCreativeProcess from '../assets/illustrations/feature-creative-process.png';
+import featureLaunch from '../assets/illustrations/feature-launch.png';
+import featureResponsive from '../assets/illustrations/feature-responsive.png';
+import featureSecureLogin from '../assets/illustrations/feature-secure-login.png';
+import ecommerceIcon from '../assets/illustrations/ecommerce.png';
+import localizationIcon from '../assets/illustrations/localization.png';
 
 const LandingPage = ({ onGetStarted, onTryEditor }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -33,12 +39,42 @@ const LandingPage = ({ onGetStarted, onTryEditor }) => {
       description: "Intuitive drag-and-drop builder for fast website creation."
     },
     {
-      icon: ShoppingCartIcon,
+      image: featureCloudStorage,
+      title: "Cloud Storage",
+      description: "Save your projects in the cloud and access them from anywhere."
+    },
+    {
+      image: featureCollaboration,
+      title: "Collaboration",
+      description: "Work with your team in real-time to build your website."
+    },
+    {
+      image: featureCreativeProcess,
+      title: "Creative Process",
+      description: "Tools to help you through the creative process of building a website."
+    },
+    {
+      image: featureLaunch,
+      title: "Launch Your Website",
+      description: "Deploy your website with a single click."
+    },
+    {
+      image: featureResponsive,
+      title: "Responsive Design",
+      description: "Your website will look great on any device."
+    },
+    {
+      image: featureSecureLogin,
+      title: "Secure Login",
+      description: "Secure user authentication and management."
+    },
+    {
+      image: ecommerceIcon,
       title: "Advanced Ecommerce",
       description: "Built-in ecommerce tools for creating powerful online stores"
     },
     {
-      icon: FlagIcon,
+      image: localizationIcon,
       title: "Full Localization",
       description: "Multi-language support and localization for global reach"
     }
@@ -132,9 +168,6 @@ const LandingPage = ({ onGetStarted, onTryEditor }) => {
                   <UserIcon className="w-5 h-5" />
                 </button>
                 <button className="text-white hover:text-blue-400 transition-colors duration-200">
-                  <ShoppingCartIcon className="w-5 h-5" />
-                </button>
-                <button className="text-white hover:text-blue-400 transition-colors duration-200">
                   <MagnifyingGlassIcon className="w-5 h-5" />
                 </button>
               </div>
@@ -193,9 +226,6 @@ const LandingPage = ({ onGetStarted, onTryEditor }) => {
                   <UserIcon className="w-5 h-5" />
                 </button>
                 <button className="text-white hover:text-blue-400 transition-colors duration-200">
-                  <ShoppingCartIcon className="w-5 h-5" />
-                </button>
-                <button className="text-white hover:text-blue-400 transition-colors duration-200">
                   <MagnifyingGlassIcon className="w-5 h-5" />
                 </button>
                 <button className="bg-[#404040] text-white px-4 py-2 rounded-lg hover:bg-[#505050] transition-colors duration-200 font-medium">
@@ -244,7 +274,7 @@ const LandingPage = ({ onGetStarted, onTryEditor }) => {
       {/* Features Section */}
       <section className="py-20 px-4 bg-[#1A1A1A] w-full">
         <div className="w-full">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
             {features.map((feature, index) => (
               <FeatureCard key={index} {...feature} />
             ))}
