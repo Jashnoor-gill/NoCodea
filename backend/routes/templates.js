@@ -1,22 +1,13 @@
 const express = require('express');
 const Template = require('../models/Template');
 const auth = require('../middleware/auth');
-const templateParser = require('../services/templateParser');
+const TemplateParser = require('../services/templateParser');
+const templateParser = new TemplateParser();
 const SiteSettings = require('../models/SiteSettings');
 const fs = require('fs').promises;
 const path = require('path');
 
 const router = express.Router();
-
-// Set global data for all templates
-templateParser.setGlobalData({
-  siteName: 'NoCodea',
-  siteUrl: 'http://localhost:3000',
-  adminUrl: 'http://localhost:5000/admin',
-  version: '1.0.0',
-  theme: 'light',
-  rtl: false
-});
 
 // @route   GET /api/templates
 // @desc    Get all templates

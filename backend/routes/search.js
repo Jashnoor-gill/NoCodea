@@ -411,7 +411,7 @@ router.get('/autocomplete', async (req, res) => {
         break;
 
       default: // Autocomplete all types
-        const [products, categories, manufacturers, vendors, posts] = await Promise.all([
+        [products, categories, manufacturers, vendors, posts] = await Promise.all([
           Product.find({
             $or: [
               { name: searchQuery },

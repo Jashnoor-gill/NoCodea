@@ -20,7 +20,7 @@ class EmailService {
       
       // Initialize transporter
       if (config.smtpHost && config.smtpUser && config.smtpPass) {
-        this.transporter = nodemailer.createTransporter({
+        this.transporter = nodemailer.createTransport({
           host: config.smtpHost,
           port: config.smtpPort || 587,
           secure: config.smtpSecure || false,
@@ -31,7 +31,7 @@ class EmailService {
         });
       } else {
         // Use default SMTP or create test account
-        this.transporter = nodemailer.createTransporter({
+        this.transporter = nodemailer.createTransport({
           host: 'smtp.ethereal.email',
           port: 587,
           secure: false,

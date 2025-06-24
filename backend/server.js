@@ -10,6 +10,8 @@ const path = require('path');
 const replacePlaceholders = require('./utils/replacePlaceholders');
 require('dotenv').config();
 
+const app = express();
+
 const passport = require('passport');
 require('./passport-google-config');
 app.use(passport.initialize());
@@ -45,8 +47,6 @@ const feedRoutes = require('./routes/feed');
 const emailRoutes = require('./routes/emails');
 const returnRoutes = require('./routes/returns');
 const wishlistRoutes = require('./routes/wishlist');
-
-const app = express();
 
 // Security middleware
 app.use(helmet());
