@@ -1,0 +1,5 @@
+{
+  "/": { "module": "index" },
+  "/graphql": { "module": "index" },
+  "/graphql/schema": { "module": "schema/index" }
+} 

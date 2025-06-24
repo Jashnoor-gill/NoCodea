@@ -164,9 +164,9 @@ const LandingPage = ({ onGetStarted, onTryEditor }) => {
             <div className="flex items-center space-x-4">
               {/* Desktop Icons */}
               <div className="hidden md:flex items-center space-x-4">
-                <button className="text-white hover:text-blue-400 transition-colors duration-200">
+                {/* <button className="text-white hover:text-blue-400 transition-colors duration-200">
                   <UserIcon className="w-5 h-5" />
-                </button>
+                </button> */}
                 <button className="text-white hover:text-blue-400 transition-colors duration-200">
                   <MagnifyingGlassIcon className="w-5 h-5" />
                 </button>
@@ -222,9 +222,9 @@ const LandingPage = ({ onGetStarted, onTryEditor }) => {
               <a href="#" className="block text-white hover:text-blue-400 transition-colors duration-200">Blog</a>
               <a href="#" className="block text-white hover:text-blue-400 transition-colors duration-200">Contact</a>
               <div className="flex items-center space-x-4 pt-4 border-t border-[#404040]">
-                <button className="text-white hover:text-blue-400 transition-colors duration-200">
+                {/* <button className="text-white hover:text-blue-400 transition-colors duration-200">
                   <UserIcon className="w-5 h-5" />
-                </button>
+                </button> */}
                 <button className="text-white hover:text-blue-400 transition-colors duration-200">
                   <MagnifyingGlassIcon className="w-5 h-5" />
                 </button>

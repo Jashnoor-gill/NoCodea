@@ -1,0 +1,37 @@
+{
+  "name": "Posts",
+  "url": "{{ADMIN_PATH}}?module=content/posts",
+  "icon": "icon-document-text-outline",
+  "show_on_modules": ["posts", "post", "pages", "categories"],
+  "items": {
+    "posts": {
+      "name": "List",
+      "url": "{{ADMIN_PATH}}?module=content/posts",
+      "module": "content/menus",
+      "action": "index",
+      "icon": "la la-file-alt"
+    },
+    "addpost": {
+      "name": "Add new",
+      "url": "{{ADMIN_PATH}}?module=content/post",
+      "module": "content/menus",
+      "action": "save",
+      "icon": "la la-plus-circle"
+    },
+    "taxonomy-heading": {
+      "name": "Taxonomy",
+      "heading": true
+    },
+    "categories-heading": {
+      "name": "General",
+      "heading": true
+    },
+    "comments": {
+      "name": "Comments",
+      "url": "{{ADMIN_PATH}}?module=content/comments&status=0",
+      "module": "content/menus",
+      "action": "index",
+      "icon": "la la-comments"
+    }
+  }
+} 

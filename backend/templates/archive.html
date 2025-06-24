@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="[data-v-global-theme]">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archive - [data-v-global-siteName]</title>
+    <link rel="stylesheet" href="[data-v-url-css/bootstrap.min.css]">
+    <link rel="stylesheet" href="[data-v-url-css/style.css]">
+</head>
+<body>
+    <div class="container my-5">
+        <!-- Archive Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1>Archive</h1>
+                <p class="lead">Browse posts by date</p>
+            </div>
+        </div>
+
+        <!-- Archive Navigation -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Archive Navigation</h5>
+                    </div>
+                    <div class="card-body">
+                        <select class="form-select" onchange="window.location.href=this.value">
+                            <option value="">Select Archive</option>
+                            [data-v-loop-archives]
+                                <option value="[data-v-item-url]" 
+                                        [data-v-item-url-selected]>
+                                    [data-v-item-title]
+                                </option>
+                            [/data-v-loop-archives]
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Current Archive: [data-v-current-archive]</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Showing [data-v-total-posts] posts from [data-v-archive-period]</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Posts Grid -->
+        <div class="row">
+            <!-- Main Content -->
+            <div class="col-md-8">
+                [data-v-if-posts]
+                    <div class="posts-grid">
+                        [data-v-loop-posts]
+                            <article class="card mb-4 post-item" data-post-id="[data-v-item-post_id]">
+                                <div class="card-body">
+                                    <div class="row">
+                                        [data-v-if-item-featured_image]
+                                            <div class="col-md-4">
+                                                <img src="[data-v-item-featured_image]" 
+                                                     alt="[data-v-item-title]" 
+                                                     class="img-fluid rounded">
+                                            </div>
+                                            <div class="col-md-8">
+                                        [/data-v-if-item-featured_image]
+                                        [data-v-if-not-item-featured_image]
+                                            <div class="col-12">
+                                        [/data-v-if-not-item-featured_image]
+                                        
+                                        <h3 class="card-title">
+                                            <a href="[data-v-item-url]" class="text-decoration-none">
+                                                [data-v-item-title]
+                                            </a>
+                                        </h3>
+                                        
+                                        <div class="post-meta text-muted mb-2">
+                                            <small>
+                                                <i class="bi bi-calendar"></i> [data-v-item-published_date]
+                                                [data-v-if-item-author]
+                                                    <i class="bi bi-person ms-3"></i> [data-v-item-author]
+                                                [/data-v-if-item-author]
+                                                [data-v-if-item-category]
+                                                    <i class="bi bi-folder ms-3"></i> 
+                                                    <a href="[data-v-item-category-url]" class="text-decoration-none">
+                                                        [data-v-item-category]
+                                                    </a>
+                                                [/data-v-if-item-category]
+                                            </small>
+                                        </div>
+                                        
+                                        <p class="card-text">[data-v-item-excerpt]</p>
+                                        
+                                        <div class="post-tags">
+                                            [data-v-loop-item-tags]
+                                                <span class="badge bg-secondary me-1">[data-v-item-tag]</span>
+                                            [/data-v-loop-item-tags]
+                                        </div>
+                                        
+                                        <a href="[data-v-item-url]" class="btn btn-primary btn-sm mt-2">
+                                            Read More
+                                        </a>
+                                    </div>
+                                </div>
+                            </article>
+                        [/data-v-loop-posts]
+                    </div>
+                    
+                    <!-- Pagination -->
+                    [data-v-if-pagination]
+                        <nav aria-label="Posts pagination">
+                            <ul class="pagination justify-content-center">
+                                [data-v-if-pagination-prev]
+                                    <li class="page-item">
+                                        <a class="page-link" href="[data-v-pagination-prev-url]">Previous</a>
+                                    </li>
+                                [/data-v-if-pagination-prev]
+                                
+                                [data-v-loop-pagination-pages]
+                                    <li class="page-item [data-v-item-active]">
+                                        <a class="page-link" href="[data-v-item-url]">[data-v-item-number]</a>
+                                    </li>
+                                [/data-v-loop-pagination-pages]
+                                
+                                [data-v-if-pagination-next]
+                                    <li class="page-item">
+                                        <a class="page-link" href="[data-v-pagination-next-url]">Next</a>
+                                    </li>
+                                [/data-v-if-pagination-next]
+                            </ul>
+                        </nav>
+                    [/data-v-if-pagination]
+                [/data-v-if-posts]
+                
+                [data-v-if-not-posts]
+                    <div class="text-center py-5">
+                        <h3>No posts found</h3>
+                        <p class="text-muted">There are no posts in this archive period.</p>
+                        <a href="[data-v-url-home]" class="btn btn-primary">Go Home</a>
+                    </div>
+                [/data-v-if-not-posts]
+            </div>
+            
+            <!-- Sidebar -->
+            <div class="col-md-4">
+                <!-- Archive Widget -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Archive</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            [data-v-loop-archives]
+                                <li class="mb-2">
+                                    <a href="[data-v-item-url]" 
+                                       class="text-decoration-none [data-v-item-url-active]">
+                                        [data-v-item-title]
+                                        <span class="badge bg-secondary float-end">[data-v-item-count]</span>
+                                    </a>
+                                </li>
+                            [/data-v-loop-archives]
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Categories Widget -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Categories</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            [data-v-loop-categories]
+                                <li class="mb-2">
+                                    <a href="[data-v-item-url]" class="text-decoration-none">
+                                        [data-v-item-name]
+                                        <span class="badge bg-primary float-end">[data-v-item-count]</span>
+                                    </a>
+                                </li>
+                            [/data-v-loop-categories]
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Recent Posts Widget -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Recent Posts</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            [data-v-loop-recent_posts]
+                                <li class="mb-3">
+                                    <div class="d-flex">
+                                        [data-v-if-item-thumbnail]
+                                            <img src="[data-v-item-thumbnail]" 
+                                                 alt="[data-v-item-title]" 
+                                                 class="rounded me-3" 
+                                                 style="width: 60px; height: 60px; object-fit: cover;">
+                                        [/data-v-if-item-thumbnail]
+                                        <div>
+                                            <h6 class="mb-1">
+                                                <a href="[data-v-item-url]" class="text-decoration-none">
+                                                    [data-v-item-title]
+                                                </a>
+                                            </h6>
+                                            <small class="text-muted">[data-v-item-published_date]</small>
+                                        </div>
+                                    </div>
+                                </li>
+                            [/data-v-loop-recent_posts]
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="[data-v-url-js/bootstrap.bundle.min.js]"></script>
+    <script>
+        // Archive navigation
+        document.querySelector('select[onchange]').addEventListener('change', function() {
+            if (this.value) {
+                window.location.href = this.value;
+            }
+        });
+        
+        // Post item hover effects
+        document.querySelectorAll('.post-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+                this.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = 'none';
+            });
+        });
+    </script>
+</body>
+</html> 

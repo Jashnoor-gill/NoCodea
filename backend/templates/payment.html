@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="[data-v-global-theme]">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Methods - [data-v-global-siteName]</title>
+    <link rel="stylesheet" href="[data-v-url-css/bootstrap.min.css]">
+    <link rel="stylesheet" href="[data-v-url-css/style.css]">
+</head>
+<body>
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Select Payment Method</h3>
+                    </div>
+                    <div class="card-body">
+                        <form action="[data-v-url-payment-process]" method="POST">
+                            [data-v-csrf]
+                            
+                            <!-- Payment Methods Loop -->
+                            <div class="payment-methods">
+                                [data-v-loop-payment_methods]
+                                    <div class="payment-method mb-3 p-3 border rounded" data-payment-id="[data-v-item-payment_id]">
+                                        <div class="form-check">
+                                            <input type="radio" 
+                                                   class="form-check-input" 
+                                                   id="payment_[data-v-item-key]" 
+                                                   name="payment_method" 
+                                                   value="[data-v-item-key]"
+                                                   required>
+                                            <label class="form-check-label fw-bold" for="payment_[data-v-item-key]">
+                                                [data-v-item-name]
+                                            </label>
+                                        </div>
+                                        
+                                        <!-- Payment Method Details -->
+                                        <div class="payment-details mt-2 ms-4">
+                                            [data-v-if-item-description]
+                                                <p class="text-muted mb-2">[data-v-item-description]</p>
+                                            [/data-v-if-item-description]
+                                            
+                                            [data-v-if-item-icon]
+                                                <img src="[data-v-item-icon]" alt="[data-v-item-name]" class="payment-icon" style="height: 30px;">
+                                            [/data-v-if-item-icon]
+                                        </div>
+                                    </div>
+                                [/data-v-loop-payment_methods]
+                            </div>
+                            
+                            <!-- Payment Form Fields -->
+                            <div class="payment-fields mt-4">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="card_number" class="form-label">Card Number</label>
+                                            <input type="text" 
+                                                   class="form-control" 
+                                                   id="card_number" 
+                                                   name="card_number" 
+                                                   placeholder="1234 5678 9012 3456"
+                                                   required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label for="expiry" class="form-label">Expiry</label>
+                                            <input type="text" 
+                                                   class="form-control" 
+                                                   id="expiry" 
+                                                   name="expiry" 
+                                                   placeholder="MM/YY"
+                                                   required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label for="cvv" class="form-label">CVV</label>
+                                            <input type="text" 
+                                                   class="form-control" 
+                                                   id="cvv" 
+                                                   name="cvv" 
+                                                   placeholder="123"
+                                                   required>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="cardholder_name" class="form-label">Cardholder Name</label>
+                                            <input type="text" 
+                                                   class="form-control" 
+                                                   id="cardholder_name" 
+                                                   name="cardholder_name" 
+                                                   placeholder="John Doe"
+                                                   required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="billing_address" class="form-label">Billing Address</label>
+                                            <textarea class="form-control" 
+                                                      id="billing_address" 
+                                                      name="billing_address" 
+                                                      rows="2"
+                                                      placeholder="Enter billing address"
+                                                      required></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Terms and Conditions -->
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input type="checkbox" 
+                                           class="form-check-input" 
+                                           id="terms" 
+                                           name="terms" 
+                                           value="1"
+                                           required>
+                                    <label class="form-check-label" for="terms">
+                                        I agree to the <a href="[data-v-url-terms]" target="_blank">Terms and Conditions</a>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div class="d-flex justify-content-between">
+                                <a href="[data-v-url-checkout]" class="btn btn-secondary">Back to Checkout</a>
+                                <button type="submit" class="btn btn-primary">Process Payment</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="[data-v-url-js/bootstrap.bundle.min.js]"></script>
+    <script>
+        // Payment method selection handling
+        document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                // Hide all payment fields first
+                document.querySelectorAll('.payment-fields').forEach(field => {
+                    field.style.display = 'none';
+                });
+                
+                // Show fields for selected payment method
+                if (this.checked) {
+                    const paymentMethod = this.closest('.payment-method');
+                    const paymentFields = document.querySelector('.payment-fields');
+                    paymentFields.style.display = 'block';
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

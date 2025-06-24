@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[data-v-global-site.name] - [data-v-t-checkout]</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-bottom">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container">
+                <a class="navbar-brand" href="/">
+                    <img src="[data-v-global-site.logo]" alt="[data-v-global-site.name]" height="40">
+                    [data-v-global-site.name]
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="container mt-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">[data-v-t-home]</a></li>
+            <li class="breadcrumb-item"><a href="/cart">[data-v-t-cart]</a></li>
+            <li class="breadcrumb-item active">[data-v-t-checkout]</li>
+        </ol>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container my-5">
+        <form method="POST" action="/checkout" id="checkout-form">
+            [data-v-csrf]
+            
+            <div class="row">
+                <!-- Checkout Form -->
+                <div class="col-lg-8">
+                    <!-- Billing Information -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">[data-v-t-billing-information]</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">[data-v-t-first-name] *</label>
+                                    <input type="text" class="form-control" name="billing_first_name" value="@@__value__@@" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">[data-v-t-last-name] *</label>
+                                    <input type="text" class="form-control" name="billing_last_name" value="@@__value__@@" required>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">[data-v-t-email] *</label>
+                                <input type="email" class="form-control" name="billing_email" value="@@__value__@@" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">[data-v-t-phone]</label>
+                                <input type="tel" class="form-control" name="billing_phone" value="@@__value__@@">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">[data-v-t-address] *</label>
+                                <input type="text" class="form-control" name="billing_address" value="@@__value__@@" required>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">[data-v-t-city] *</label>
+                                    <input type="text" class="form-control" name="billing_city" value="@@__value__@@" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">[data-v-t-postal-code] *</label>
+                                    <input type="text" class="form-control" name="billing_postal_code" value="@@__value__@@" required>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">[data-v-t-country] *</label>
+                                    <select class="form-select" name="billing_country_id" required>
+                                        <option value="">[data-v-t-select-country]</option>
+                                        @country|before = @@__countries_loop__@@
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">[data-v-t-region] *</label>
+                                    <select class="form-select" name="billing_region_id" required>
+                                        <option value="">[data-v-t-select-region]</option>
+                                        @region|before = @@__regions_loop__@@
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Shipping Information -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="different_shipping_address" id="different_shipping" @@__value__@@>
+                                <label class="form-check-label" for="different_shipping">
+                                    [data-v-t-different-shipping-address]
+                                </label>
+                            </div>
+                        </div>
+                        <div class="card-body" id="shipping-address" style="display: none;">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">[data-v-t-first-name] *</label>
+                                    <input type="text" class="form-control" name="shipping_first_name" value="@@__value__@@">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">[data-v-t-last-name] *</label>
+                                    <input type="text" class="form-control" name="shipping_last_name" value="@@__value__@@">
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">[data-v-t-address] *</label>
+                                <input type="text" class="form-control" name="shipping_address" value="@@__value__@@">
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">[data-v-t-city] *</label>
+                                    <input type="text" class="form-control" name="shipping_city" value="@@__value__@@">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">[data-v-t-postal-code] *</label>
+                                    <input type="text" class="form-control" name="shipping_postal_code" value="@@__value__@@">
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">[data-v-t-country] *</label>
+                                    <select class="form-select" name="shipping_country_id">
+                                        <option value="">[data-v-t-select-country]</option>
+                                        @country|before = @@__countries_loop__@@
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">[data-v-t-region] *</label>
+                                    <select class="form-select" name="shipping_region_id">
+                                        <option value="">[data-v-t-select-region]</option>
+                                        @region|before = @@__regions_loop__@@
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">[data-v-t-payment-method]</h5>
+                        </div>
+                        <div class="card-body">
+                            [data-v-loop-payment-methods]
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="payment_method" value="[data-v-payment-method-id]" id="payment_[data-v-payment-method-id]" @@__value__@@>
+                                <label class="form-check-label" for="payment_[data-v-payment-method-id]">
+                                    [data-v-payment-method-name]
+                                </label>
+                            </div>
+                            [/data-v-loop-payment-methods]
+                        </div>
+                    </div>
+
+                    <!-- Shipping Method -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">[data-v-t-shipping-method]</h5>
+                        </div>
+                        <div class="card-body">
+                            [data-v-loop-shipping-methods]
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="shipping_method" value="[data-v-shipping-method-id]" id="shipping_[data-v-shipping-method-id]" @@__value__@@>
+                                <label class="form-check-label" for="shipping_[data-v-shipping-method-id]">
+                                    [data-v-shipping-method-name] - [data-v-shipping-method-price]
+                                </label>
+                            </div>
+                            [/data-v-loop-shipping-methods]
+                        </div>
+                    </div>
+
+                    <!-- Additional Options -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" name="register" value="1" id="register" @@__value__@@>
+                                <label class="form-check-label" for="register">
+                                    [data-v-t-create-account]
+                                </label>
+                            </div>
+                            
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" name="newsletter" value="1" id="newsletter" @@__value__@@>
+                                <label class="form-check-label" for="newsletter">
+                                    [data-v-t-subscribe-newsletter]
+                                </label>
+                            </div>
+                            
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="terms" value="1" id="terms" @@__value__@@ required>
+                                <label class="form-check-label" for="terms">
+                                    [data-v-t-agree-terms] <a href="/terms" target="_blank">[data-v-t-terms-conditions]</a>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">[data-v-t-order-summary]</h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- Cart Items -->
+                            [data-v-loop-cart-items]
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div>
+                                    <h6 class="mb-0">[data-v-cart-item-name]</h6>
+                                    <small class="text-muted">[data-v-t-quantity]: [data-v-cart-item-quantity]</small>
+                                </div>
+                                <span>[data-v-cart-item-price]</span>
+                            </div>
+                            [/data-v-loop-cart-items]
+                            
+                            <hr>
+                            
+                            <!-- Totals -->
+                            [data-v-loop-totals]
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>[data-v-total-title]</span>
+                                <span>[data-v-total-value]</span>
+                            </div>
+                            [/data-v-loop-totals]
+                            
+                            <hr>
+                            
+                            <!-- Grand Total -->
+                            <div class="d-flex justify-content-between fw-bold">
+                                <span>[data-v-t-grand-total]</span>
+                                <span>[data-v-grand-total]</span>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary w-100 mt-3">
+                                [data-v-t-place-order]
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-4 mt-5">
+        <div class="container text-center">
+            <p>&copy; [data-v-year] [data-v-global-site.name]. [data-v-t-all-rights-reserved].</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle shipping address
+        document.getElementById('different_shipping').addEventListener('change', function() {
+            const shippingAddress = document.getElementById('shipping-address');
+            shippingAddress.style.display = this.checked ? 'block' : 'none';
+        });
+        
+        // Load regions when country changes
+        document.querySelectorAll('select[name*="country_id"]').forEach(select => {
+            select.addEventListener('change', function() {
+                const regionSelect = this.closest('.row').querySelector('select[name*="region_id"]');
+                if (regionSelect) {
+                    // Load regions for selected country
+                    fetch(`/api/regions?country_id=${this.value}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            regionSelect.innerHTML = '<option value="">[data-v-t-select-region]</option>';
+                            data.forEach(region => {
+                                regionSelect.innerHTML += `<option value="${region.region_id}">${region.name}</option>`;
+                            });
+                        });
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,13 @@
+{
+  "driver": "mail",
+  "smtp": {
+    "host": "tls://smtp.gmail.com",
+    "user": "example@gmail.com",
+    "password": "example_password",
+    "port": "587",
+    "timeout": "5"
+  },
+  "from": "admin",
+  "from_address": "hello@vvveb.com",
+  "sendmail": "/usr/sbin/sendmail -bs"
+} 

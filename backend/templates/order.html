@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[data-v-global-site.name] - [data-v-t-order-details]</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-bottom">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container">
+                <a class="navbar-brand" href="/">
+                    <img src="[data-v-global-site.logo]" alt="[data-v-global-site.name]" height="40">
+                    [data-v-global-site.name]
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="container mt-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">[data-v-t-home]</a></li>
+            <li class="breadcrumb-item"><a href="/user/orders">[data-v-t-my-orders]</a></li>
+            <li class="breadcrumb-item active">[data-v-t-order-details]</li>
+        </ol>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container my-5">
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Order Status -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">[data-v-t-order-status]</h5>
+                            <span class="badge bg-[data-v-order-status-color]">[data-v-order-status]</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>[data-v-t-order-number]</h6>
+                                <p class="text-muted">[data-v-order-order_number]</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>[data-v-t-order-date]</h6>
+                                <p class="text-muted">[data-v-order-date_added]</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Items -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">[data-v-t-order-items]</h5>
+                    </div>
+                    <div class="card-body">
+                        [data-v-loop-order-items]
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="[data-v-order-item-image]" alt="[data-v-order-item-name]" class="me-3" style="width: 80px; height: 80px; object-fit: cover;">
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">[data-v-order-item-name]</h6>
+                                <p class="text-muted mb-1">[data-v-order-item-model]</p>
+                                <small class="text-muted">[data-v-t-quantity]: [data-v-order-item-quantity]</small>
+                            </div>
+                            <div class="text-end">
+                                <span class="fw-bold">[data-v-order-item-price]</span>
+                                <br>
+                                <small class="text-muted">[data-v-t-total]: [data-v-order-item-total]</small>
+                            </div>
+                        </div>
+                        [/data-v-loop-order-items]
+                    </div>
+                </div>
+
+                <!-- Order History -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">[data-v-t-order-history]</h5>
+                    </div>
+                    <div class="card-body">
+                        [data-v-loop-order-history]
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">[data-v-order-history-status]</h6>
+                                <p class="text-muted mb-0">[data-v-order-history-comment]</p>
+                            </div>
+                            <div class="text-end">
+                                <small class="text-muted">[data-v-order-history-date_added]</small>
+                            </div>
+                        </div>
+                        [/data-v-loop-order-history]
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="col-lg-4">
+                <!-- Order Totals -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">[data-v-t-order-summary]</h5>
+                    </div>
+                    <div class="card-body">
+                        [data-v-loop-order-totals]
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>[data-v-order-total-title]</span>
+                            <span>[data-v-order-total-value]</span>
+                        </div>
+                        [/data-v-loop-order-totals]
+                        
+                        <hr>
+                        
+                        <div class="d-flex justify-content-between fw-bold">
+                            <span>[data-v-t-grand-total]</span>
+                            <span>[data-v-order-total]</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Billing Address -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">[data-v-t-billing-address]</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-1">[data-v-order-billing_first_name] [data-v-order-billing_last_name]</p>
+                        <p class="mb-1">[data-v-order-billing_address]</p>
+                        <p class="mb-1">[data-v-order-billing_city], [data-v-order-billing_region] [data-v-order-billing_postal_code]</p>
+                        <p class="mb-1">[data-v-order-billing_country]</p>
+                        <p class="mb-0">[data-v-order-billing_email]</p>
+                    </div>
+                </div>
+
+                <!-- Shipping Address -->
+                [data-v-if-order-shipping_address]
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">[data-v-t-shipping-address]</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-1">[data-v-order-shipping_first_name] [data-v-order-shipping_last_name]</p>
+                        <p class="mb-1">[data-v-order-shipping_address]</p>
+                        <p class="mb-1">[data-v-order-shipping_city], [data-v-order-shipping_region] [data-v-order-shipping_postal_code]</p>
+                        <p class="mb-0">[data-v-order-shipping_country]</p>
+                    </div>
+                </div>
+                [/data-v-if-order-shipping_address]
+
+                <!-- Action Buttons -->
+                <div class="d-grid gap-2">
+                    [data-v-if-order-can-cancel]
+                    <button class="btn btn-outline-danger" data-v-cancel-order>[data-v-t-cancel-order]</button>
+                    [/data-v-if-order-can-cancel]
+                    
+                    [data-v-if-order-can-return]
+                    <a href="/returns?order_id=[data-v-order-order_id]" class="btn btn-outline-warning">[data-v-t-return-order]</a>
+                    [/data-v-if-order-can-return]
+                    
+                    <a href="/user/orders" class="btn btn-outline-primary">[data-v-t-back-to-orders]</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-4 mt-5">
+        <div class="container text-center">
+            <p>&copy; [data-v-year] [data-v-global-site.name]. [data-v-t-all-rights-reserved].</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

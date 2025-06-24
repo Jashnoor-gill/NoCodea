@@ -1,0 +1,88 @@
+{
+  "name": "Products",
+  "url": "{{ADMIN_PATH}}?module=product/products",
+  "icon": "icon-cube-outline",
+  "show_on_modules": ["Product/products", "Product/product", "Product/categories"],
+  "class": "align-middle columns-2",
+  "items": {
+    "products": {
+      "name": "Products",
+      "url": "{{ADMIN_PATH}}?module=product/products",
+      "module": "product/products",
+      "action": "index",
+      "icon": "la la-box"
+    },
+    "addpage": {
+      "name": "Add new",
+      "url": "{{ADMIN_PATH}}?module=product/product",
+      "module": "product/product",
+      "action": "save",
+      "icon": "la la-plus-circle"
+    },
+    "taxonomy-heading": {
+      "name": "Taxonomy",
+      "heading": true
+    },
+    "relations-heading": {
+      "name": "Relations",
+      "heading": true
+    },
+    "manufacturers": {
+      "name": "Manufacturers",
+      "url": "{{ADMIN_PATH}}?module=product/manufacturers",
+      "module": "product/manufacturers",
+      "action": "index",
+      "icon": "la la-industry"
+    },
+    "vendors": {
+      "name": "Vendors",
+      "url": "{{ADMIN_PATH}}?module=product/vendors",
+      "module": "product/vendors",
+      "action": "index",
+      "icon": "la la-store"
+    },
+    "content-heading": {
+      "name": "Content",
+      "heading": true
+    },
+    "digital": {
+      "name": "Digital assets",
+      "url": "{{ADMIN_PATH}}?module=product/digital-assets",
+      "module": "product/digital-assets",
+      "action": "index",
+      "icon": "la la-cloud-download-alt"
+    },
+    "options": {
+      "name": "Options",
+      "url": "{{ADMIN_PATH}}?module=product/options",
+      "module": "product/options",
+      "action": "index",
+      "icon": "la la-stream"
+    },
+    "attributes": {
+      "name": "Attributes",
+      "url": "{{ADMIN_PATH}}?module=product/attribute-groups",
+      "module": "product/attributes-groups",
+      "action": "index",
+      "icon": "la la-list"
+    },
+    "feedback-heading": {
+      "name": "User feedback",
+      "heading": true
+    },
+    "reviews": {
+      "name": "Reviews",
+      "url": "{{ADMIN_PATH}}?module=product/product-reviews&status=0",
+      "module": "product/product-reviews",
+      "action": "index",
+      "icon": "la la-comment"
+    },
+    "questions": {
+      "name": "Questions",
+      "url": "{{ADMIN_PATH}}?module=product/product-questions&status=0",
+      "module": "product/product-questions",
+      "action": "index",
+      "icon": "la la-question-circle"
+    }
+  }
+} 

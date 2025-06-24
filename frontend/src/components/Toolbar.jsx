@@ -2,13 +2,21 @@ import React from 'react';
 
 const Toolbar = ({ 
   isPreviewMode, 
-  setIsPreviewMode, 
+  onPreview, 
   onSave, 
   onLoad, 
   onClear, 
   onExport, 
   onImport, 
-  elementCount 
+  elementCount, 
+  onOpenAssets,
+  onOpenCode,
+  onOpenCommands,
+  canUndo,
+  canRedo,
+  onUndo,
+  onRedo,
+  loading
 }) => {
   const handleImportClick = () => {
     const input = document.createElement('input');
@@ -23,6 +31,7 @@ const Toolbar = ({
       <div className="flex items-center justify-between">
         {/* Left Section */}
         <div className="flex items-center space-x-4">
+          {/* Element Count */}
           <div className="flex items-center space-x-2">
             <span className="text-sm font-medium text-gray-700">Elements:</span>
             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
@@ -32,11 +41,38 @@ const Toolbar = ({
           
           <div className="h-4 w-px bg-gray-300"></div>
           
+          {/* Undo/Redo */}
+          <div className="flex items-center space-x-1">
+            <button
+              onClick={onUndo}
+              disabled={!canUndo}
+              className="p-2 text-gray-500 hover:text-gray-700 disabled:text-gray-300 disabled:cursor-not-allowed rounded-lg hover:bg-gray-100"
+              title="Undo (Ctrl+Z)"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+              </svg>
+            </button>
+            <button
+              onClick={onRedo}
+              disabled={!canRedo}
+              className="p-2 text-gray-500 hover:text-gray-700 disabled:text-gray-300 disabled:cursor-not-allowed rounded-lg hover:bg-gray-100"
+              title="Redo (Ctrl+Y)"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 10h-10a8 8 0 00-8 8v2M21 10l-6 6m6-6l-6-6" />
+              </svg>
+            </button>
+          </div>
+          
+          <div className="h-4 w-px bg-gray-300"></div>
+          
+          {/* Mode Toggle */}
           <div className="flex items-center space-x-2">
             <span className="text-sm text-gray-500">Mode:</span>
             <div className="flex bg-gray-100 rounded-lg p-1">
               <button
-                onClick={() => setIsPreviewMode(false)}
+                onClick={() => onPreview(false)}
                 className={`px-3 py-1 text-xs font-medium rounded-md transition-colors duration-200 ${
                   !isPreviewMode
                     ? 'bg-white text-gray-900 shadow-sm'
@@ -46,7 +82,7 @@ const Toolbar = ({
                 🏗️ Build
               </button>
               <button
-                onClick={() => setIsPreviewMode(true)}
+                onClick={() => onPreview(true)}
                 className={`px-3 py-1 text-xs font-medium rounded-md transition-colors duration-200 ${
                   isPreviewMode
                     ? 'bg-white text-gray-900 shadow-sm'
@@ -59,18 +95,65 @@ const Toolbar = ({
           </div>
         </div>
 
+        {/* Center Section - Quick Actions */}
+        <div className="flex items-center space-x-2">
+          {/* Command Palette */}
+          <button
+            onClick={onOpenCommands}
+            className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+            title="Command Palette (Ctrl+K)"
+          >
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            ⌘K
+          </button>
+
+          {/* Code Manager */}
+          <button
+            onClick={onOpenCode}
+            className="inline-flex items-center px-3 py-2 text-sm font-medium text-purple-700 bg-white border border-purple-300 rounded-lg hover:bg-purple-50 transition-colors duration-200"
+            title="Code Manager"
+          >
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+            </svg>
+            Code
+          </button>
+
+          {/* Asset Manager */}
+          <button
+            onClick={onOpenAssets}
+            className="inline-flex items-center px-3 py-2 text-sm font-medium text-green-700 bg-white border border-green-300 rounded-lg hover:bg-green-50 transition-colors duration-200"
+            title="Asset Manager"
+          >
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none" />
+              <rect x="7" y="9" width="10" height="6" rx="2" stroke="currentColor" strokeWidth="2" fill="none" />
+              <path d="M7 15l2-2a2 2 0 012.828 0l2.172 2.172a2 2 0 002.828 0L17 15" stroke="currentColor" strokeWidth="2" fill="none" />
+            </svg>
+            Assets
+          </button>
+        </div>
+
         {/* Right Section */}
         <div className="flex items-center space-x-3">
           {/* File Operations */}
           <div className="flex items-center space-x-2">
             <button
               onClick={onSave}
-              className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-sm"
+              disabled={loading}
+              className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors duration-200 shadow-sm"
+              title="Save (Ctrl+S)"
             >
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-              </svg>
-              Save Website
+              {loading ? (
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+              ) : (
+                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                </svg>
+              )}
+              Save
             </button>
             
             <button
@@ -116,7 +199,7 @@ const Toolbar = ({
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
               </svg>
-              Clear All
+              Clear
             </button>
             
             <button
@@ -144,6 +227,7 @@ const Toolbar = ({
           <div className="flex items-center space-x-4">
             <span>Last action: {new Date().toLocaleTimeString()}</span>
             <span>Auto-save: Enabled</span>
+            <span>History: {canUndo ? 'Available' : 'None'}</span>
           </div>
         </div>
       </div>

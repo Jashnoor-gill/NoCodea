@@ -5,6 +5,7 @@ import sampleGallery2 from '../assets/photos/template-business-hero.jpg';
 import sampleGallery3 from '../assets/photos/template-restaurant-hero.jpg';
 
 const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) => {
+  if (element.hidden) return null;
   const renderElement = () => {
     switch (element.type) {
       // Layout Components
@@ -380,6 +381,250 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
           </div>
         );
 
+      // Add new component types below:
+      case 'audio':
+        return (
+          <div className="space-y-2">
+            <audio controls className="w-full">
+              <source src={element.src || ''} type="audio/mpeg" />
+              Your browser does not support the audio element.
+            </audio>
+          </div>
+        );
+      case 'embed':
+        return (
+          <div className="space-y-2">
+            <div className="w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300">
+              <span className="text-gray-500 text-sm">Embed Placeholder</span>
+            </div>
+          </div>
+        );
+      case 'tabs':
+        return (
+          <div className="space-y-2">
+            <div className="flex space-x-2 mb-2">
+              <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded">Tab 1</button>
+              <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded">Tab 2</button>
+            </div>
+            <div className="p-4 bg-gray-50 border rounded">Tab content here</div>
+          </div>
+        );
+      case 'accordion':
+        return (
+          <div className="space-y-2">
+            <div className="border rounded">
+              <button className="w-full text-left px-4 py-2 bg-gray-100 font-medium">Accordion Title</button>
+              <div className="p-4">Accordion content here</div>
+            </div>
+          </div>
+        );
+      case 'faq':
+        return (
+          <div className="space-y-2">
+            <div className="border rounded p-4 bg-gray-50">
+              <div className="font-semibold">Q: Sample question?</div>
+              <div className="text-gray-600">A: Sample answer goes here.</div>
+            </div>
+          </div>
+        );
+      case 'team':
+        return (
+          <div className="space-y-2">
+            <div className="flex space-x-4">
+              <div className="flex flex-col items-center">
+                <div className="w-16 h-16 bg-gray-300 rounded-full mb-2"></div>
+                <div className="font-medium">Jane</div>
+                <div className="text-xs text-gray-500">Designer</div>
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="w-16 h-16 bg-gray-300 rounded-full mb-2"></div>
+                <div className="font-medium">John</div>
+                <div className="text-xs text-gray-500">Developer</div>
+              </div>
+            </div>
+          </div>
+        );
+      case 'stats':
+        return (
+          <div className="flex space-x-8">
+            <div className="text-center">
+              <div className="text-2xl font-bold">123</div>
+              <div className="text-xs text-gray-500">Users</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold">456</div>
+              <div className="text-xs text-gray-500">Sales</div>
+            </div>
+          </div>
+        );
+      case 'timeline':
+        return (
+          <div className="space-y-2">
+            <div className="border-l-2 border-blue-400 pl-4">
+              <div className="mb-4">
+                <div className="font-semibold">2023</div>
+                <div className="text-gray-600">Started project</div>
+              </div>
+              <div>
+                <div className="font-semibold">2024</div>
+                <div className="text-gray-600">Launched product</div>
+              </div>
+            </div>
+          </div>
+        );
+      case 'progress':
+        return (
+          <div className="w-full bg-gray-200 rounded-full h-4">
+            <div className="bg-blue-600 h-4 rounded-full" style={{ width: '60%' }}></div>
+          </div>
+        );
+      case 'badge':
+        return (
+          <span className="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-semibold">Badge</span>
+        );
+      case 'alert':
+        return (
+          <div className="p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 rounded">
+            <strong>Alert:</strong> This is an alert message.
+          </div>
+        );
+      case 'modal':
+        return (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 z-50">
+            <div className="bg-white p-8 rounded shadow-lg">
+              <div className="font-bold mb-2">Modal Title</div>
+              <div className="mb-4">Modal content goes here.</div>
+              <button className="px-4 py-2 bg-blue-600 text-white rounded">Close</button>
+            </div>
+          </div>
+        );
+      case 'tooltip':
+        return (
+          <span className="relative group">
+            <span className="underline cursor-help">Hover me</span>
+            <span className="absolute left-1/2 transform -translate-x-1/2 mt-2 px-2 py-1 bg-black text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity">Tooltip text</span>
+          </span>
+        );
+      case 'product-card':
+        return (
+          <div className="bg-white border rounded-lg p-4 shadow-sm">
+            <img src={element.image || sampleGallery1} alt="Product" className="w-full h-32 object-cover rounded mb-2" />
+            <div className="font-semibold">Product Name</div>
+            <div className="text-gray-500 mb-2">$99.99</div>
+            <button className="w-full px-4 py-2 bg-blue-600 text-white rounded">Add to Cart</button>
+          </div>
+        );
+      case 'product-grid':
+        return (
+          <div className="grid grid-cols-2 gap-4">
+            {[1,2,3,4].map(i => (
+              <div key={i} className="bg-white border rounded-lg p-4 shadow-sm">
+                <img src={sampleGallery1} alt="Product" className="w-full h-20 object-cover rounded mb-2" />
+                <div className="font-semibold">Product {i}</div>
+                <div className="text-gray-500 mb-2">$99.99</div>
+                <button className="w-full px-2 py-1 bg-blue-600 text-white rounded text-xs">Add</button>
+              </div>
+            ))}
+          </div>
+        );
+      case 'shopping-cart':
+        return (
+          <div className="bg-white border rounded-lg p-4 shadow-sm">
+            <div className="font-semibold mb-2">Shopping Cart</div>
+            <div className="text-gray-500">Your cart is empty.</div>
+          </div>
+        );
+      case 'checkout':
+        return (
+          <div className="bg-white border rounded-lg p-4 shadow-sm">
+            <div className="font-semibold mb-2">Checkout</div>
+            <div className="text-gray-500">Checkout form goes here.</div>
+          </div>
+        );
+      case 'product-detail':
+        return (
+          <div className="bg-white border rounded-lg p-4 shadow-sm">
+            <img src={sampleGallery1} alt="Product" className="w-full h-32 object-cover rounded mb-2" />
+            <div className="font-semibold">Product Name</div>
+            <div className="text-gray-500 mb-2">$99.99</div>
+            <div className="text-sm">Product details and description here.</div>
+          </div>
+        );
+      case 'reviews':
+        return (
+          <div className="bg-white border rounded-lg p-4 shadow-sm">
+            <div className="font-semibold mb-2">Reviews</div>
+            <div className="text-gray-500">No reviews yet.</div>
+          </div>
+        );
+      case 'wishlist':
+        return (
+          <div className="bg-white border rounded-lg p-4 shadow-sm">
+            <div className="font-semibold mb-2">Wishlist</div>
+            <div className="text-gray-500">Your wishlist is empty.</div>
+          </div>
+        );
+      case 'html':
+        return (
+          <div className="w-full p-2 border border-gray-300 rounded bg-gray-50">
+            <div dangerouslySetInnerHTML={{ __html: element.content || '<b>Custom HTML Block</b>' }} />
+          </div>
+        );
+      case 'script':
+        return (
+          <div className="w-full p-2 border border-gray-300 rounded bg-gray-50">
+            <pre className="text-xs text-gray-700">{element.content || '// Custom JS Block'}</pre>
+          </div>
+        );
+      case 'style':
+        return (
+          <div className="w-full p-2 border border-gray-300 rounded bg-gray-50">
+            <pre className="text-xs text-gray-700">{element.content || '/* Custom CSS Block */'}</pre>
+          </div>
+        );
+      case 'iframe':
+        return (
+          <div className="w-full h-48 border border-gray-300 rounded bg-gray-50">
+            <iframe src={element.src || 'https://example.com'} title="iFrame" className="w-full h-full rounded" />
+          </div>
+        );
+      case 'widget':
+        return (
+          <div className="w-full p-2 border border-gray-300 rounded bg-gray-50">
+            <span className="text-xs text-gray-700">Widget Placeholder</span>
+          </div>
+        );
+      case 'api':
+        return (
+          <div className="w-full p-2 border border-gray-300 rounded bg-gray-50">
+            <span className="text-xs text-gray-700">API Data Placeholder</span>
+          </div>
+        );
+      case 'chart':
+        return (
+          <div className="w-full h-32 flex items-center justify-center border border-gray-300 rounded bg-gray-50">
+            <span className="text-xs text-gray-700">Chart Placeholder</span>
+          </div>
+        );
+      case 'calendar':
+        return (
+          <div className="w-full h-32 flex items-center justify-center border border-gray-300 rounded bg-gray-50">
+            <span className="text-xs text-gray-700">Calendar Placeholder</span>
+          </div>
+        );
+      case 'slider':
+        return (
+          <div className="w-full h-32 flex items-center justify-center border border-gray-300 rounded bg-gray-50">
+            <span className="text-xs text-gray-700">Slider Placeholder</span>
+          </div>
+        );
+      case 'lightbox':
+        return (
+          <div className="w-full h-32 flex items-center justify-center border border-gray-300 rounded bg-gray-50">
+            <span className="text-xs text-gray-700">Lightbox Placeholder</span>
+          </div>
+        );
+
       default:
         return (
           <div className="w-full p-4 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
@@ -391,15 +636,26 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
     }
   };
 
+  // Apply styles from element.styles
+  const inlineStyles = element.styles || {};
+
   return (
     <div
       className={`relative group cursor-pointer transition-all duration-200 ${
         isSelected ? 'ring-2 ring-blue-500 ring-offset-2' : 'hover:ring-2 hover:ring-gray-300 hover:ring-offset-2'
       }`}
-      onClick={() => onClick(element)}
+      style={inlineStyles}
+      onClick={() => {
+        if (!element.locked) onClick(element);
+      }}
     >
       {renderElement()}
-      
+      {/* Lock overlay in builder mode */}
+      {!isPreviewMode && element.locked && (
+        <div className="absolute inset-0 bg-white bg-opacity-60 flex items-center justify-center z-10 pointer-events-none">
+          <span className="text-2xl text-gray-400">🔒</span>
+        </div>
+      )}
       {!isPreviewMode && (
         <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
@@ -510,7 +766,7 @@ const Canvas = ({ formElements, setFormElements, selectedElement, setSelectedEle
                   </div>
                 </div>
               ) : (
-                formElements.map((element) => (
+                formElements.filter(el => !el.hidden).map((element) => (
                   <FormElement
                     key={element.id}
                     element={element}

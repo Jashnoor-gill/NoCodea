@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[data-v-global-site.name] - [data-v-category-name]</title>
+    <meta name="description" content="[data-v-category-description]">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-bottom">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container">
+                <a class="navbar-brand" href="/">
+                    <img src="[data-v-global-site.logo]" alt="[data-v-global-site.name]" height="40">
+                    [data-v-global-site.name]
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="container mt-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">[data-v-t-home]</a></li>
+            <li class="breadcrumb-item"><a href="/categories">[data-v-t-categories]</a></li>
+            <li class="breadcrumb-item active">[data-v-category-name]</li>
+        </ol>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container my-5">
+        <!-- Category Header -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h1 class="h2">[data-v-category-name]</h1>
+                <p class="text-muted">[data-v-category-description]</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <div class="d-flex align-items-center justify-content-end">
+                    <span class="me-3">[data-v-t-showing] [data-v-products-count] [data-v-t-of] [data-v-total-products] [data-v-t-products]</span>
+                    <select class="form-select w-auto" data-v-sort-select>
+                        <option value="name_asc">[data-v-t-name-asc]</option>
+                        <option value="name_desc">[data-v-t-name-desc]</option>
+                        <option value="price_asc">[data-v-t-price-asc]</option>
+                        <option value="price_desc">[data-v-t-price-desc]</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters and Products -->
+        <div class="row">
+            <!-- Filters Sidebar -->
+            <div class="col-lg-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">[data-v-t-filters]</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Price Range -->
+                        <div class="mb-3">
+                            <label class="form-label">[data-v-t-price-range]</label>
+                            <div class="d-flex gap-2">
+                                <input type="number" class="form-control" placeholder="[data-v-t-min]" data-v-price-min>
+                                <input type="number" class="form-control" placeholder="[data-v-t-max]" data-v-price-max>
+                            </div>
+                        </div>
+
+                        <!-- Manufacturers -->
+                        [data-v-if-manufacturers]
+                        <div class="mb-3">
+                            <label class="form-label">[data-v-t-manufacturers]</label>
+                            [data-v-loop-manufacturers]
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="[data-v-manufacturer-id]" data-v-manufacturer-checkbox>
+                                <label class="form-check-label">[data-v-manufacturer-name]</label>
+                            </div>
+                            [/data-v-loop-manufacturers]
+                        </div>
+                        [/data-v-if-manufacturers]
+
+                        <!-- Apply Filters -->
+                        <button class="btn btn-primary w-100" data-v-apply-filters>[data-v-t-apply-filters]</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="col-lg-9">
+                [data-v-if-products]
+                <div class="row g-4">
+                    [data-v-loop-products]
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card h-100 product-card">
+                            <img src="[data-v-product-image]" class="card-img-top" alt="[data-v-product-name]">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">[data-v-product-name]</h5>
+                                <p class="card-text text-muted">[data-v-product-excerpt]</p>
+                                <div class="mt-auto">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="h5 mb-0 text-primary">[data-v-product-price]</span>
+                                        [data-v-if-product-old-price]
+                                        <span class="text-muted text-decoration-line-through">[data-v-product-old-price]</span>
+                                        [/data-v-if-product-old-price]
+                                    </div>
+                                    <div class="d-grid gap-2">
+                                        <a href="/products/[data-v-product-slug]" class="btn btn-outline-primary">[data-v-t-view-details]</a>
+                                        <button class="btn btn-primary" data-v-add-to-cart data-product-id="[data-v-product-id]">
+                                            <i class="bi bi-cart-plus"></i> [data-v-t-add-to-cart]
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    [/data-v-loop-products]
+                </div>
+
+                <!-- Pagination -->
+                [data-v-if-pagination]
+                <nav aria-label="[data-v-t-pagination]" class="mt-5">
+                    <ul class="pagination justify-content-center">
+                        [data-v-if-prev-page]
+                        <li class="page-item">
+                            <a class="page-link" href="[data-v-prev-url]">[data-v-t-previous]</a>
+                        </li>
+                        [/data-v-if-prev-page]
+                        
+                        [data-v-loop-pages]
+                        <li class="page-item [data-v-if-current]active[/data-v-if-current]">
+                            <a class="page-link" href="[data-v-page-url]">[data-v-page-number]</a>
+                        </li>
+                        [/data-v-loop-pages]
+                        
+                        [data-v-if-next-page]
+                        <li class="page-item">
+                            <a class="page-link" href="[data-v-next-url]">[data-v-t-next]</a>
+                        </li>
+                        [/data-v-if-next-page]
+                    </ul>
+                </nav>
+                [/data-v-if-pagination]
+                [/data-v-if-products]
+
+                [data-v-else]
+                <div class="text-center py-5">
+                    <i class="bi bi-box display-1 text-muted"></i>
+                    <h3 class="mt-3">[data-v-t-no-products]</h3>
+                    <p class="text-muted">[data-v-t-no-products-description]</p>
+                </div>
+                [/data-v-else]
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-4 mt-5">
+        <div class="container text-center">
+            <p>&copy; [data-v-year] [data-v-global-site.name]. [data-v-t-all-rights-reserved].</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

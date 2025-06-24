@@ -14,161 +14,186 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Set up axios defaults
+  // Check if user is logged in on app start
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      checkAuthStatus();
+    } else {
+      setLoading(false);
     }
   }, []);
 
-  // Check if user is authenticated on app load
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        if (token) {
-          const response = await axios.get('http://localhost:5000/api/auth/me');
-          setUser(response.data.user);
-        }
-      } catch (error) {
-        console.error('Auth check failed:', error);
+  const checkAuthStatus = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/auth/me');
+      if (response.data.success) {
+        setUser(response.data.user);
+        setIsAuthenticated(true);
+      } else {
+        // Token is invalid, clear it
         localStorage.removeItem('token');
         delete axios.defaults.headers.common['Authorization'];
-      } finally {
-        setLoading(false);
       }
-    };
+    } catch (error) {
+      console.error('Auth check failed:', error);
+      // Token is invalid or expired, clear it
+      localStorage.removeItem('token');
+      delete axios.defaults.headers.common['Authorization'];
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    checkAuth();
-  }, []);
+  const login = async (email, password) => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/auth/login', {
+        email,
+        password
+      });
 
-  // Register user
+      if (response.data.success) {
+        const { token, user } = response.data;
+        
+        // Store token
+        localStorage.setItem('token', token);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        
+        // Update state
+        setUser(user);
+        setIsAuthenticated(true);
+        
+        return true;
+      } else {
+        throw new Error(response.data.message || 'Login failed');
+      }
+    } catch (error) {
+      // Re-throw the error to be handled by the component
+      throw error;
+    }
+  };
+
   const register = async (userData) => {
     try {
-      setError(null);
       const response = await axios.post('http://localhost:5000/api/auth/register', userData);
-      
-      const { token, user } = response.data;
-      localStorage.setItem('token', token);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      setUser(user);
-      
-      return { success: true };
+
+      if (response.data.success) {
+        const { token, user } = response.data;
+        
+        // Store token
+        localStorage.setItem('token', token);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        
+        // Update state
+        setUser(user);
+        setIsAuthenticated(true);
+        
+        return { success: true };
+      } else {
+        return { success: false, error: response.data.message };
+      }
     } catch (error) {
-      const message = error.response?.data?.message || 'Registration failed';
-      setError(message);
-      return { success: false, error: message };
+      console.error('Registration error:', error);
+      return { 
+        success: false, 
+        error: error.response?.data?.message || 'Registration failed' 
+      };
     }
   };
 
-  // Login user
-  const login = async (credentials) => {
-    try {
-      setError(null);
-      const response = await axios.post('http://localhost:5000/api/auth/login', credentials);
-      
-      const { token, user } = response.data;
-      localStorage.setItem('token', token);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      setUser(user);
-      
-      return { success: true };
-    } catch (error) {
-      const message = error.response?.data?.message || 'Login failed';
-      setError(message);
-      return { success: false, error: message };
-    }
-  };
-
-  // Logout user
   const logout = async () => {
     try {
+      // Call logout endpoint if needed
       await axios.post('http://localhost:5000/api/auth/logout');
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
+      // Clear local storage and state regardless of API call result
       localStorage.removeItem('token');
       delete axios.defaults.headers.common['Authorization'];
       setUser(null);
-      setError(null);
+      setIsAuthenticated(false);
     }
   };
 
-  // Update user profile
   const updateProfile = async (profileData) => {
     try {
-      setError(null);
-      const response = await axios.put('http://localhost:5000/api/auth/update-profile', profileData);
-      setUser(response.data.user);
-      return { success: true };
+      const response = await axios.put('http://localhost:5000/api/users/profile', profileData);
+      
+      if (response.data.success) {
+        setUser(response.data.data);
+        return { success: true };
+      } else {
+        return { success: false, error: response.data.message };
+      }
     } catch (error) {
-      const message = error.response?.data?.message || 'Profile update failed';
-      setError(message);
-      return { success: false, error: message };
+      console.error('Profile update error:', error);
+      return { 
+        success: false, 
+        error: error.response?.data?.message || 'Profile update failed' 
+      };
     }
   };
 
-  // Forgot password
+  const handleOAuthCallback = async (token) => {
+    try {
+      // Store the OAuth token
+      localStorage.setItem('token', token);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      
+      // Get user info
+      await checkAuthStatus();
+    } catch (error) {
+      console.error('OAuth callback error:', error);
+      localStorage.removeItem('token');
+      delete axios.defaults.headers.common['Authorization'];
+    }
+  };
+
   const forgotPassword = async (email) => {
     try {
-      setError(null);
-      await axios.post('http://localhost:5000/api/auth/forgot-password', { email });
-      return { success: true };
+      const response = await axios.post('http://localhost:5000/api/auth/forgot-password', { email });
+      return { success: response.data.success, message: response.data.message };
     } catch (error) {
-      const message = error.response?.data?.message || 'Password reset failed';
-      setError(message);
-      return { success: false, error: message };
+      console.error('Forgot password error:', error);
+      return { 
+        success: false, 
+        message: error.response?.data?.message || 'Failed to send reset email' 
+      };
     }
   };
 
-  // Reset password
   const resetPassword = async (token, password) => {
     try {
-      setError(null);
-      await axios.post('http://localhost:5000/api/auth/reset-password', { token, password });
-      return { success: true };
+      const response = await axios.post('http://localhost:5000/api/auth/reset-password', { 
+        token, 
+        password 
+      });
+      return { success: response.data.success, message: response.data.message };
     } catch (error) {
-      const message = error.response?.data?.message || 'Password reset failed';
-      setError(message);
-      return { success: false, error: message };
-    }
-  };
-
-  // Handle OAuth callback
-  const handleOAuthCallback = (token) => {
-    localStorage.setItem('token', token);
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    // Fetch user data
-    checkAuth();
-  };
-
-  // Check authentication status
-  const checkAuth = async () => {
-    try {
-      const response = await axios.get('http://localhost:5000/api/auth/me');
-      setUser(response.data.user);
-    } catch (error) {
-      console.error('Auth check failed:', error);
-      logout();
+      console.error('Reset password error:', error);
+      return { 
+        success: false, 
+        message: error.response?.data?.message || 'Failed to reset password' 
+      };
     }
   };
 
   const value = {
     user,
     loading,
-    error,
-    register,
+    isAuthenticated,
     login,
+    register,
     logout,
     updateProfile,
+    handleOAuthCallback,
     forgotPassword,
     resetPassword,
-    handleOAuthCallback,
-    checkAuth,
-    isAuthenticated: !!user
+    checkAuthStatus
   };
 
   return (

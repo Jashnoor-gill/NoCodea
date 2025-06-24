@@ -1,0 +1,7 @@
+{
+  "auth": { "mode": "http" },
+  "session": { "driver": "request" },
+  "email": { "driver": "mail" },
+  "cache": { "driver": "file" },
+  "key": "Q8qJ6CVpUW4msSM8pHmdGwyXIkSvT6Lo"
+} 

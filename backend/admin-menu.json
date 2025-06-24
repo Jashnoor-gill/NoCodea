@@ -1,0 +1,659 @@
+{
+  "dashboard": {
+    "name": "Dashboard",
+    "url": "{{ADMIN_PATH}}",
+    "module": "index",
+    "action": "index",
+    "icon": "icon-pulse-outline"
+  },
+  "edit": {
+    "name": "Edit website",
+    "url": "{{ADMIN_PATH}}?module=editor/editor&url={{HOME_URL}}&template=index.html",
+    "module": "editor/editor",
+    "action": "index",
+    "icon": "icon-color-wand-outline"
+  },
+  "pages": {
+    "name": "Pages",
+    "url": "{{ADMIN_PATH}}?module=content/posts&type=page",
+    "module": "content/posts",
+    "action": "index",
+    "icon": "icon-document-outline",
+    "show_on_modules": ["posts", "post", "pages", "categories"],
+    "items": {
+      "pages": {
+        "name": "Pages",
+        "url": "{{ADMIN_PATH}}?module=content/posts&type=page",
+        "module": "content/posts",
+        "action": "index",
+        "icon": "la la-file-invoice"
+      },
+      "addpage": {
+        "name": "Add new page",
+        "url": "{{ADMIN_PATH}}?module=content/post&type=page",
+        "module": "content/post",
+        "action": "save",
+        "icon": "la la-plus-circle"
+      },
+      "taxonomy-heading": {
+        "name": "Taxonomy",
+        "heading": true
+      },
+      "menus": {
+        "name": "Menus",
+        "url": "{{ADMIN_PATH}}?module=content/menus&type=page",
+        "module": "content/menus",
+        "action": "index",
+        "icon": "la la-boxes"
+      }
+    }
+  },
+  "medialibrary": {
+    "name": "Media library",
+    "url": "{{ADMIN_PATH}}?module=media/media",
+    "module": "media/media",
+    "action": "index",
+    "icon": "icon-images-outline"
+  },
+  "users": {
+    "name": "Users",
+    "url": "{{ADMIN_PATH}}?module=user/users",
+    "module": "user/users",
+    "action": "index",
+    "icon": "icon-people-outline",
+    "items": {
+      "users": {
+        "name": "Users",
+        "url": "{{ADMIN_PATH}}?module=user/users",
+        "module": "user/users",
+        "action": "index",
+        "icon": "la la-user"
+      },
+      "add-user": {
+        "name": "Add new user",
+        "url": "{{ADMIN_PATH}}?module=user/user",
+        "module": "user/user",
+        "action": "save",
+        "icon": "la la-plus-circle"
+      },
+      "groups": {
+        "name": "Groups",
+        "heading": true
+      },
+      "user-groups": {
+        "name": "User groups",
+        "url": "{{ADMIN_PATH}}?module=user/user-groups",
+        "module": "user/user-groups",
+        "action": "index",
+        "icon": "la la-user-friends"
+      },
+      "add-group": {
+        "name": "Add new group",
+        "url": "{{ADMIN_PATH}}?module=user/user-group",
+        "module": "user/user-group",
+        "action": "save",
+        "icon": "la la-plus-circle"
+      }
+    }
+  },
+  "ecommerce": {
+    "name": "Ecommerce",
+    "url": "{{ADMIN_PATH}}?module=product/products",
+    "heading": true,
+    "module": "product/products"
+  },
+  "sales": {
+    "name": "Sales",
+    "url": "{{ADMIN_PATH}}?module=order/orders",
+    "module": "order/orders",
+    "action": "index",
+    "icon": "icon-bag-handle-outline",
+    "items": {
+      "orders": {
+        "name": "Orders",
+        "url": "{{ADMIN_PATH}}?module=order/orders",
+        "module": "order/orders",
+        "action": "index",
+        "icon": "la la-file-invoice-dollar"
+      },
+      "subscriptions": {
+        "name": "Subscriptions",
+        "url": "{{ADMIN_PATH}}?module=order/subscriptions",
+        "module": "order/subscriptions",
+        "action": "index",
+        "icon": "la la-retweet"
+      },
+      "returns": {
+        "name": "Returns",
+        "url": "{{ADMIN_PATH}}?module=order/returns",
+        "module": "order/returns",
+        "action": "index",
+        "icon": "la la-undo"
+      },
+      "marketing-heading": {
+        "name": "Marketing",
+        "heading": true
+      },
+      "coupons": {
+        "name": "Discount coupons",
+        "icon": "la la-percentage",
+        "url": "{{ADMIN_PATH}}?module=order/coupons",
+        "module": "order/coupons",
+        "action": "index"
+      },
+      "vouchers": {
+        "name": "Gift vouchers",
+        "icon": "la la-gift",
+        "url": "{{ADMIN_PATH}}?module=order/vouchers",
+        "module": "order/vouchers",
+        "action": "index"
+      }
+    }
+  },
+  "configuration": {
+    "name": "Configuration",
+    "url": "{{ADMIN_PATH}}?module=settings/sites",
+    "module": "settings/sites",
+    "heading": true
+  },
+  "plugins": {
+    "name": "Plugins",
+    "url": "{{ADMIN_PATH}}?module=plugin/plugins",
+    "module": "plugin/plugins",
+    "action": "index",
+    "icon": "icon-extension-puzzle-outline",
+    "class": "align-top",
+    "items": {
+      "installed": {
+        "name": "Installed Plugins",
+        "url": "{{ADMIN_PATH}}?module=plugin/plugins",
+        "module": "plugin/plugins",
+        "action": "index",
+        "icon": "la la-plug"
+      },
+      "marketplace": {
+        "name": "Add new plugin",
+        "url": "{{ADMIN_PATH}}?module=plugin/market",
+        "module": "plugin/market",
+        "action": "index",
+        "icon": "la la-plus-circle"
+      },
+      "editor": {
+        "name": "Code editor",
+        "url": "{{ADMIN_PATH}}?module=editor/code&type=plugins",
+        "module": "editor/code",
+        "action": "index",
+        "icon": "la la-code"
+      },
+      "plugins-heading": {
+        "name": "Plugins",
+        "heading": true
+      }
+    }
+  },
+  "themes": {
+    "name": "Themes",
+    "url": "{{ADMIN_PATH}}?module=theme/themes",
+    "module": "theme/themes",
+    "action": "index",
+    "icon": "icon-copy-outline",
+    "items": {
+      "installed": {
+        "name": "Installed Themes",
+        "url": "{{ADMIN_PATH}}?module=theme/themes",
+        "module": "theme/themes",
+        "action": "index",
+        "icon": "la la-brush"
+      },
+      "marketplace": {
+        "name": "Add new",
+        "url": "{{ADMIN_PATH}}?module=theme/market",
+        "module": "theme/market",
+        "action": "index",
+        "icon": "la la-plus-circle"
+      },
+      "fonts-heading": {
+        "name": "Customize",
+        "heading": true,
+        "url": "javascript:void(0)",
+        "module": "theme/themes",
+        "action": "fonts"
+      },
+      "fonts": {
+        "name": "Fonts",
+        "url": "{{ADMIN_PATH}}?module=theme/fonts",
+        "module": "theme/themes",
+        "action": "fonts",
+        "icon": "la la-font"
+      },
+      "editor": {
+        "name": "Code editor",
+        "url": "{{ADMIN_PATH}}?module=editor/code&type=themes",
+        "module": "editor/code",
+        "action": "index",
+        "icon": "la la-code"
+      }
+    }
+  },
+  "field": {
+    "name": "Fields",
+    "url": "{{ADMIN_PATH}}?module=field/field-groups",
+    "module": "field/fields",
+    "action": "index",
+    "icon": "icon-reader-outline",
+    "items": {
+      "groups": {
+        "name": "Field groups",
+        "url": "{{ADMIN_PATH}}?module=field/field-groups",
+        "module": "field/field-groups",
+        "action": "index",
+        "icon": "la la-stream"
+      },
+      "new": {
+        "name": "Add new",
+        "url": "{{ADMIN_PATH}}?module=field/field-group",
+        "module": "field/field-group",
+        "action": "index",
+        "icon": "la la-plus-circle"
+      }
+    }
+  },
+  "settings": {
+    "name": "Settings",
+    "url": "{{ADMIN_PATH}}?module=settings/sites",
+    "module": "settings/sites",
+    "action": "index",
+    "icon": "icon-settings-outline",
+    "class": "align-top mega-menu",
+    "items": {
+      "sites": {
+        "name": "Sites",
+        "url": "{{ADMIN_PATH}}?module=settings/sites",
+        "module": "settings/sites",
+        "action": "index",
+        "icon": "la la-stop la-90",
+        "items": {
+          "sites": {
+            "name": "Sites",
+            "url": "{{ADMIN_PATH}}?module=settings/sites",
+            "module": "settings/sites",
+            "action": "index",
+            "icon": "la la-stop"
+          },
+          "add-site": {
+            "name": "Add new",
+            "url": "{{ADMIN_PATH}}?module=settings/site",
+            "module": "settings/site",
+            "action": "add",
+            "icon": "la la-plus-circle"
+          }
+        }
+      },
+      "admins": {
+        "name": "Admin users",
+        "url": "{{ADMIN_PATH}}?module=admin/users",
+        "module": "admin/users",
+        "action": "index",
+        "icon": "la la-user",
+        "items": {
+          "users": {
+            "name": "Users",
+            "url": "{{ADMIN_PATH}}?module=admin/users",
+            "module": "admin/users",
+            "action": "index",
+            "icon": "la la-user"
+          },
+          "add": {
+            "name": "Add new user",
+            "url": "{{ADMIN_PATH}}?module=admin/user",
+            "module": "admin/user",
+            "action": "index",
+            "icon": "la la-user-plus"
+          },
+          "roles-heading": {
+            "name": "Roles",
+            "heading": true
+          },
+          "role": {
+            "name": "Manage Roles",
+            "url": "{{ADMIN_PATH}}?module=admin/roles",
+            "module": "admin/roles",
+            "action": "index",
+            "icon": "la la-user-cog"
+          },
+          "add-role": {
+            "name": "Add Role",
+            "url": "{{ADMIN_PATH}}?module=admin/role",
+            "module": "admin/role",
+            "action": "index",
+            "icon": "la la-user-tag"
+          }
+        }
+      },
+      "content": {
+        "name": "Content",
+        "url": "{{ADMIN_PATH}}?module=content/menus",
+        "module": "settings/taxonomies",
+        "action": "index",
+        "icon": "la la-file-alt",
+        "items": {
+          "taxonomies": {
+            "name": "Taxonomies",
+            "url": "{{ADMIN_PATH}}?module=settings/taxonomies",
+            "module": "content/taxonomies",
+            "action": "index",
+            "icon": "la la-boxes"
+          },
+          "custom-posts": {
+            "name": "Post types",
+            "url": "{{ADMIN_PATH}}?module=settings/post-types",
+            "module": "settings/post-types",
+            "action": "index",
+            "icon": "la la-file-alt"
+          },
+          "custom-products": {
+            "name": "Product types",
+            "url": "{{ADMIN_PATH}}?module=settings/product-types",
+            "module": "settings/product-types",
+            "action": "index",
+            "icon": "la la-box"
+          }
+        }
+      },
+      "ecommerce": {
+        "name": "Ecommerce",
+        "url": "{{ADMIN_PATH}}?module=user/users",
+        "module": "user/users",
+        "action": "index",
+        "icon": "la la-shopping-cart",
+        "class": "align-top",
+        "items": {
+          "subscriptions": {
+            "name": "Subscriptions plans",
+            "icon": "la la-receipt",
+            "url": "{{ADMIN_PATH}}?module=settings/subscription-plans",
+            "module": "settings/subscriptions-plans",
+            "action": "index"
+          },
+          "taxes": {
+            "name": "Taxes",
+            "icon": "la la-file-invoice-dollar",
+            "url": "{{ADMIN_PATH}}?module=settings/tax-types",
+            "module": "settings/tax-types",
+            "action": "index",
+            "items": {
+              "tax-types": {
+                "name": "Tax types",
+                "url": "{{ADMIN_PATH}}?module=settings/tax-types",
+                "module": "settings/tax-types",
+                "action": "index",
+                "icon": "la la-file-invoice"
+              },
+              "tax-rates": {
+                "name": "Tax rates",
+                "url": "{{ADMIN_PATH}}?module=settings/tax-rates",
+                "module": "settings/tax-rates",
+                "action": "index",
+                "icon": "la la-file-invoice-dollar"
+              }
+            }
+          },
+          "statuses": {
+            "name": "Statuses",
+            "icon": "la la-tags",
+            "url": "{{ADMIN_PATH}}?module=settings/order-statuses",
+            "module": "settings/order-statuses",
+            "action": "index",
+            "items": {
+              "stock-status": {
+                "name": "Stock",
+                "url": "{{ADMIN_PATH}}?module=settings/stock-statuses",
+                "module": "settings/stock-statuses",
+                "action": "index",
+                "icon": "la la-box"
+              },
+              "subscription-status": {
+                "name": "Subscription",
+                "url": "{{ADMIN_PATH}}?module=settings/subscription-statuses",
+                "module": "settings/subscription-statuses",
+                "action": "index",
+                "icon": "la la-retweet"
+              },
+              "order-heading": {
+                "name": "Order",
+                "heading": true
+              },
+              "order-status": {
+                "name": "Order",
+                "url": "{{ADMIN_PATH}}?module=settings/order-statuses",
+                "module": "settings/order-statuses",
+                "action": "index",
+                "icon": "la la-file-invoice"
+              },
+              "payment-status": {
+                "name": "Payment",
+                "url": "{{ADMIN_PATH}}?module=settings/payment-statuses",
+                "module": "settings/payment-statuses",
+                "action": "index",
+                "icon": "la la-coins"
+              },
+              "shipping-status": {
+                "name": "Shipping",
+                "url": "{{ADMIN_PATH}}?module=settings/shipping-statuses",
+                "module": "settings/shipping-statuses",
+                "action": "index",
+                "icon": "la la-shipping-fast"
+              },
+              "status-heading": {
+                "name": "Returns",
+                "heading": true
+              },
+              "return-status": {
+                "name": "Return status",
+                "url": "{{ADMIN_PATH}}?module=settings/return-statuses",
+                "module": "settings/return-statuses",
+                "action": "index",
+                "icon": "la la-undo"
+              },
+              "return-resolutions": {
+                "name": "Return resolutions",
+                "url": "{{ADMIN_PATH}}?module=settings/return-resolutions",
+                "module": "settings/return-resolutions",
+                "action": "index",
+                "icon": "la la-exchange-alt"
+              },
+              "return-reasons": {
+                "name": "Return reasons",
+                "url": "{{ADMIN_PATH}}?module=settings/return-reasons",
+                "module": "settings/return-reasons",
+                "action": "index",
+                "icon": "la la-undo-alt"
+              }
+            }
+          },
+          "classes": {
+            "name": "Measurements",
+            "icon": "la la-ruler",
+            "url": "{{ADMIN_PATH}}?module=settings/weight-types",
+            "module": "settings/weight-types",
+            "action": "index",
+            "items": {
+              "order-length": {
+                "name": "Length",
+                "url": "{{ADMIN_PATH}}?module=settings/length-types",
+                "module": "settings/length-types",
+                "action": "index",
+                "icon": "la la-ruler-horizontal"
+              },
+              "stock-weight": {
+                "name": "Weight",
+                "url": "{{ADMIN_PATH}}?module=settings/weight-types",
+                "module": "settings/weight-types",
+                "action": "index",
+                "icon": "la la-box"
+              }
+            }
+          }
+        }
+      },
+      "localization": {
+        "name": "Localization",
+        "url": "{{ADMIN_PATH}}?module=localization/languages",
+        "module": "localization/languages",
+        "action": "index",
+        "icon": "la la-flag",
+        "items": {
+          "languages": {
+            "name": "Languages",
+            "icon": "la la-language",
+            "url": "{{ADMIN_PATH}}?module=localization/languages",
+            "module": "localization/languages",
+            "action": "index"
+          },
+          "currencies": {
+            "name": "Currencies",
+            "icon": "la la-coins",
+            "url": "{{ADMIN_PATH}}?module=localization/currencies",
+            "module": "localization/currencies",
+            "action": "index"
+          },
+          "geo-location": {
+            "name": "Geo location",
+            "icon": "la la-globe",
+            "url": "{{ADMIN_PATH}}?module=localization/region-groups",
+            "module": "localization/region-groups",
+            "action": "index",
+            "class": "align-top",
+            "items": {
+              "countries": {
+                "name": "Countries",
+                "icon": "la la-flag",
+                "url": "{{ADMIN_PATH}}?module=localization/countries",
+                "module": "localization/countries",
+                "action": "index"
+              },
+              "regions": {
+                "name": "Regions",
+                "icon": "la la-city",
+                "url": "{{ADMIN_PATH}}?module=localization/regions",
+                "module": "localization/regions",
+                "action": "index"
+              },
+              "geoRegions": {
+                "name": "Region Groups",
+                "icon": "la la-atlas",
+                "url": "{{ADMIN_PATH}}?module=localization/region-groups",
+                "module": "localization/region-groups",
+                "action": "index"
+              }
+            }
+          }
+        }
+      },
+      "system": {
+        "name": "System",
+        "url": "{{ADMIN_PATH}}?module=settings/email",
+        "module": "settings/email",
+        "action": "index",
+        "icon": "la la-tools",
+        "items": {
+          "email": {
+            "name": "Email settings",
+            "icon": "la la-envelope",
+            "url": "{{ADMIN_PATH}}?module=settings/email",
+            "module": "settings/email",
+            "action": "index"
+          }
+        }
+      }
+    }
+  },
+  "tools": {
+    "name": "Tools",
+    "url": "{{ADMIN_PATH}}?module=tools/cache",
+    "module": "tools/cache",
+    "action": "index",
+    "icon": "icon-build-outline",
+    "class": "align-top",
+    "items": {
+      "cache": {
+        "name": "Cache",
+        "url": "{{ADMIN_PATH}}?module=tools/cache",
+        "module": "tools/cache",
+        "action": "index",
+        "icon": "la la-circle-notch"
+      },
+      "backup": {
+        "name": "Backup",
+        "url": "{{ADMIN_PATH}}?module=tools/backup",
+        "module": "tools/backup",
+        "action": "index",
+        "icon": "la la-server"
+      },
+      "cron": {
+        "name": "Cron job",
+        "url": "{{ADMIN_PATH}}?module=tools/cron",
+        "module": "tools/cron",
+        "action": "index",
+        "icon": "la la-history la-90"
+      },
+      "import-export": {
+        "name": "Import/Export",
+        "url": "{{ADMIN_PATH}}?module=tools/import",
+        "module": "tools/import",
+        "action": "index",
+        "icon": "la la-upload",
+        "items": {
+          "content-heading": {
+            "name": "Content",
+            "heading": true
+          },
+          "import": {
+            "name": "Import content",
+            "icon": "la la-file-import",
+            "url": "{{ADMIN_PATH}}?module=tools/import",
+            "module": "tools/import",
+            "action": "index"
+          },
+          "export": {
+            "name": "Export content",
+            "icon": "la la-file-export",
+            "url": "{{ADMIN_PATH}}?module=tools/export",
+            "module": "tools/export",
+            "action": "index"
+          }
+        }
+      },
+      "system": {
+        "name": "System info",
+        "url": "{{ADMIN_PATH}}?module=tools/systeminfo",
+        "module": "tools/systeminfo",
+        "action": "index",
+        "icon": "la la-info-circle",
+        "items": {
+          "info": {
+            "name": "System Info",
+            "icon": "la la-info",
+            "url": "{{ADMIN_PATH}}?module=tools/systeminfo",
+            "module": "tools/systeminfo",
+            "action": "index"
+          },
+          "error-log": {
+            "name": "Error log",
+            "url": "{{ADMIN_PATH}}?module=tools/errorlog",
+            "module": "tools/errorlog",
+            "action": "index",
+            "icon": "la la-bug"
+          }
+        }
+      },
+      "update": {
+        "name": "Update",
+        "url": "{{ADMIN_PATH}}?module=tools/update",
+        "module": "tools/update",
+        "action": "index",
+        "icon": "la la-sync"
+      }
+    }
+  }
+} 

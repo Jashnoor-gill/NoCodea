@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="[data-v-global-theme]">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories - [data-v-global-siteName]</title>
+    <link rel="stylesheet" href="[data-v-url-css/bootstrap.min.css]">
+    <link rel="stylesheet" href="[data-v-url-css/style.css]">
+</head>
+<body>
+    <div class="container my-5">
+        <!-- Categories Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1>Categories</h1>
+                <p class="lead">Browse content by category</p>
+            </div>
+        </div>
+
+        <!-- Categories Grid -->
+        <div class="row">
+            <!-- Main Categories -->
+            <div class="col-md-8">
+                <div class="categories-grid">
+                    [data-v-loop-categories]
+                        <div class="card mb-4 category-item" data-cat-id="[data-v-item-taxonomy_item_id]">
+                            <div class="card-body">
+                                <div class="row">
+                                    [data-v-if-item-image]
+                                        <div class="col-md-4">
+                                            <img src="[data-v-item-image]" 
+                                                 alt="[data-v-item-name]" 
+                                                 class="img-fluid rounded">
+                                        </div>
+                                        <div class="col-md-8">
+                                    [/data-v-if-item-image]
+                                    [data-v-if-not-item-image]
+                                        <div class="col-12">
+                                    [/data-v-if-not-item-image]
+                                    
+                                    <h3 class="card-title">
+                                        <a href="[data-v-item-url]" class="text-decoration-none">
+                                            [data-v-item-name]
+                                        </a>
+                                    </h3>
+                                    
+                                    [data-v-if-item-description]
+                                        <p class="card-text">[data-v-item-description]</p>
+                                    [/data-v-if-item-description]
+                                    
+                                    <div class="category-meta text-muted mb-3">
+                                        <small>
+                                            <i class="bi bi-file-text"></i> [data-v-item-post_count] posts
+                                            [data-v-if-item-product_count]
+                                                <i class="bi bi-box ms-3"></i> [data-v-item-product_count] products
+                                            [/data-v-if-item-product_count]
+                                        </small>
+                                    </div>
+                                    
+                                    <!-- Subcategories -->
+                                    [data-v-if-item-children]
+                                        <div class="subcategories">
+                                            <h6>Subcategories:</h6>
+                                            <div class="row">
+                                                [data-v-loop-item-children]
+                                                    <div class="col-md-6 mb-2">
+                                                        <a href="[data-v-item-url]" class="text-decoration-none">
+                                                            <i class="bi bi-arrow-right"></i> [data-v-item-name]
+                                                            <span class="badge bg-secondary ms-1">[data-v-item-post_count]</span>
+                                                        </a>
+                                                    </div>
+                                                [/data-v-loop-item-children]
+                                            </div>
+                                        </div>
+                                    [/data-v-if-item-children]
+                                    
+                                    <a href="[data-v-item-url]" class="btn btn-primary btn-sm mt-2">
+                                        View Category
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    [/data-v-loop-categories]
+                </div>
+                
+                <!-- Category Posts Preview -->
+                [data-v-if-current-category]
+                    <div class="category-posts mt-5">
+                        <h3>Posts in [data-v-current-category-name]</h3>
+                        <div class="posts-list">
+                            [data-v-loop-category-posts]
+                                <article class="card mb-3 post-item" data-post-id="[data-v-item-post_id]">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            [data-v-if-item-thumbnail]
+                                                <div class="col-md-3">
+                                                    <img src="[data-v-item-thumbnail]" 
+                                                         alt="[data-v-item-title]" 
+                                                         class="img-fluid rounded">
+                                                </div>
+                                                <div class="col-md-9">
+                                            [/data-v-if-item-thumbnail]
+                                            [data-v-if-not-item-thumbnail]
+                                                <div class="col-12">
+                                            [/data-v-if-not-item-thumbnail]
+                                            
+                                            <h5 class="card-title">
+                                                <a href="[data-v-item-url]" class="text-decoration-none">
+                                                    [data-v-item-title]
+                                                </a>
+                                            </h5>
+                                            
+                                            <div class="post-meta text-muted mb-2">
+                                                <small>
+                                                    <i class="bi bi-calendar"></i> [data-v-item-published_date]
+                                                    [data-v-if-item-author]
+                                                        <i class="bi bi-person ms-3"></i> [data-v-item-author]
+                                                    [/data-v-if-item-author]
+                                                </small>
+                                            </div>
+                                            
+                                            <p class="card-text">[data-v-item-excerpt]</p>
+                                            
+                                            <a href="[data-v-item-url]" class="btn btn-outline-primary btn-sm">
+                                                Read More
+                                            </a>
+                                        </div>
+                                    </div>
+                                </article>
+                            [/data-v-loop-category-posts]
+                        </div>
+                        
+                        <!-- Category Pagination -->
+                        [data-v-if-category-pagination]
+                            <nav aria-label="Category posts pagination">
+                                <ul class="pagination justify-content-center">
+                                    [data-v-if-category-pagination-prev]
+                                        <li class="page-item">
+                                            <a class="page-link" href="[data-v-category-pagination-prev-url]">Previous</a>
+                                        </li>
+                                    [/data-v-if-category-pagination-prev]
+                                    
+                                    [data-v-loop-category-pagination-pages]
+                                        <li class="page-item [data-v-item-active]">
+                                            <a class="page-link" href="[data-v-item-url]">[data-v-item-number]</a>
+                                        </li>
+                                    [/data-v-loop-category-pagination-pages]
+                                    
+                                    [data-v-if-category-pagination-next]
+                                        <li class="page-item">
+                                            <a class="page-link" href="[data-v-category-pagination-next-url]">Next</a>
+                                        </li>
+                                    [/data-v-if-category-pagination-next]
+                                </ul>
+                            </nav>
+                        [/data-v-if-category-pagination]
+                    </div>
+                [/data-v-if-current-category]
+            </div>
+            
+            <!-- Sidebar -->
+            <div class="col-md-4">
+                <!-- Category Tree -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Category Tree</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="category-tree">
+                            [data-v-loop-categories-tree]
+                                <div class="category-tree-item" data-level="[data-v-item-level]">
+                                    <a href="[data-v-item-url]" 
+                                       class="text-decoration-none [data-v-item-url-active]"
+                                       style="padding-left: [data-v-item-level]em;">
+                                        [data-v-item-name]
+                                        <span class="badge bg-secondary float-end">[data-v-item-count]</span>
+                                    </a>
+                                    
+                                    <!-- Nested subcategories -->
+                                    [data-v-if-item-children]
+                                        <div class="subcategory-tree">
+                                            [data-v-loop-item-children]
+                                                <div class="category-tree-item" data-level="[data-v-item-level]">
+                                                    <a href="[data-v-item-url]" 
+                                                       class="text-decoration-none [data-v-item-url-active]"
+                                                       style="padding-left: [data-v-item-level]em;">
+                                                        [data-v-item-name]
+                                                        <span class="badge bg-secondary float-end">[data-v-item-count]</span>
+                                                    </a>
+                                                </div>
+                                            [/data-v-loop-item-children]
+                                        </div>
+                                    [/data-v-if-item-children]
+                                </div>
+                            [/data-v-loop-categories-tree]
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Popular Categories -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Popular Categories</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            [data-v-loop-popular-categories]
+                                <li class="mb-2">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <a href="[data-v-item-url]" class="text-decoration-none">
+                                            [data-v-item-name]
+                                        </a>
+                                        <span class="badge bg-primary">[data-v-item-post_count]</span>
+                                    </div>
+                                    <div class="progress mt-1" style="height: 4px;">
+                                        <div class="progress-bar" 
+                                             style="width: [data-v-item-percentage]%"></div>
+                                    </div>
+                                </li>
+                            [/data-v-loop-popular-categories]
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Category Statistics -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Statistics</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <h4 class="text-primary">[data-v-total-categories]</h4>
+                                <small class="text-muted">Categories</small>
+                            </div>
+                            <div class="col-6">
+                                <h4 class="text-success">[data-v-total-posts]</h4>
+                                <small class="text-muted">Posts</small>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <h4 class="text-info">[data-v-total-products]</h4>
+                                <small class="text-muted">Products</small>
+                            </div>
+                            <div class="col-6">
+                                <h4 class="text-warning">[data-v-avg-posts-per-category]</h4>
+                                <small class="text-muted">Avg Posts</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="[data-v-url-js/bootstrap.bundle.min.js]"></script>
+    <script>
+        // Category tree toggle
+        document.querySelectorAll('.category-tree-item').forEach(item => {
+            const link = item.querySelector('a');
+            const subcategories = item.querySelector('.subcategory-tree');
+            
+            if (subcategories) {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    subcategories.style.display = 
+                        subcategories.style.display === 'none' ? 'block' : 'none';
+                });
+            }
+        });
+        
+        // Category item hover effects
+        document.querySelectorAll('.category-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+                this.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = 'none';
+            });
+        });
+        
+        // Post item hover effects
+        document.querySelectorAll('.post-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.borderColor = '#007bff';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.borderColor = '';
+            });
+        });
+    </script>
+</body>
+</html> 

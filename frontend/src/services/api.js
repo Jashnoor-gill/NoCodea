@@ -145,4 +145,34 @@ export const saveTemplate = async (htmlContent, templateName) => {
     console.error('Error saving template:', error);
     throw error;
   }
-}; 
+};
+
+export async function fetchAdminMenu() {
+  const res = await fetch('/api/menu/admin');
+  if (!res.ok) throw new Error('Failed to fetch admin menu');
+  return res.json();
+}
+
+export async function fetchCustomPostMenu() {
+  const res = await fetch('/api/menu/custom-post');
+  if (!res.ok) throw new Error('Failed to fetch custom post menu');
+  return res.json();
+}
+
+export async function fetchCustomProductMenu() {
+  const res = await fetch('/api/menu/custom-product');
+  if (!res.ok) throw new Error('Failed to fetch custom product menu');
+  return res.json();
+}
+
+export async function fetchAppSettings() {
+  const res = await fetch('/api/settings');
+  if (!res.ok) throw new Error('Failed to fetch app settings');
+  return res.json();
+}
+
+export async function fetchAppRoutes() {
+  const res = await fetch('/api/routes');
+  if (!res.ok) throw new Error('Failed to fetch app routes');
+  return res.json();
+} 

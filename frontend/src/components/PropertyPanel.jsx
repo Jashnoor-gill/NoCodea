@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 
-const PropertyPanel = ({ selectedElement, onUpdateElement }) => {
+const PropertyPanel = ({ element, onUpdate }) => {
   const [activeTab, setActiveTab] = useState('content');
 
-  if (!selectedElement) {
+  if (!element) {
     return (
       <div className="w-80 bg-white border-l border-gray-200 flex flex-col">
         <div className="p-6 border-b border-gray-200">
@@ -22,33 +22,43 @@ const PropertyPanel = ({ selectedElement, onUpdateElement }) => {
   }
 
   const handleChange = (field, value) => {
-    onUpdateElement({
-      ...selectedElement,
+    onUpdate({
+      ...element,
       [field]: value,
     });
   };
 
+  const handleStyleChange = (property, value) => {
+    onUpdate({
+      ...element,
+      styles: {
+        ...element.styles,
+        [property]: value,
+      },
+    });
+  };
+
   const renderContentTab = () => {
-    const isContentComponent = ['heading', 'paragraph', 'button', 'link'].includes(selectedElement.type);
-    const isFormComponent = ['text', 'email', 'number', 'textarea', 'select', 'checkbox', 'radio', 'date', 'file'].includes(selectedElement.type);
-    const isLayoutComponent = ['container', 'row', 'column', 'section', 'divider', 'spacer'].includes(selectedElement.type);
+    const isTextComponent = ['heading', 'paragraph', 'button', 'link'].includes(element.type);
+    const isFormComponent = ['text', 'email', 'number', 'url', 'textarea', 'select', 'checkbox', 'radio', 'date', 'time', 'file', 'password', 'tel', 'search', 'range', 'color'].includes(element.type);
+    const isMediaComponent = ['image', 'video', 'audio', 'gallery', 'carousel', 'map', 'embed'].includes(element.type);
 
     return (
       <div className="space-y-6">
-        {/* Content Properties */}
-        {isContentComponent && (
+        {/* Text Content */}
+        {isTextComponent && (
           <div className="space-y-4">
             <h4 className="text-sm font-medium text-gray-900">Content</h4>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                {selectedElement.type === 'heading' ? 'Heading Text' :
-                 selectedElement.type === 'paragraph' ? 'Paragraph Text' :
-                 selectedElement.type === 'button' ? 'Button Text' :
+                {element.type === 'heading' ? 'Heading Text' :
+                 element.type === 'paragraph' ? 'Paragraph Text' :
+                 element.type === 'button' ? 'Button Text' :
                  'Link Text'}
               </label>
-              {selectedElement.type === 'paragraph' ? (
+              {element.type === 'paragraph' ? (
                 <textarea
-                  value={selectedElement.content || ''}
+                  value={element.content || ''}
                   onChange={(e) => handleChange('content', e.target.value)}
                   rows={4}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none"
@@ -57,7 +67,7 @@ const PropertyPanel = ({ selectedElement, onUpdateElement }) => {
               ) : (
                 <input
                   type="text"
-                  value={selectedElement.content || ''}
+                  value={element.content || ''}
                   onChange={(e) => handleChange('content', e.target.value)}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                   placeholder="Enter your content..."
@@ -75,7 +85,7 @@ const PropertyPanel = ({ selectedElement, onUpdateElement }) => {
               <label className="block text-sm font-medium text-gray-700 mb-2">Label</label>
               <input
                 type="text"
-                value={selectedElement.label || ''}
+                value={element.label || ''}
                 onChange={(e) => handleChange('label', e.target.value)}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                 placeholder="Enter field label..."
@@ -85,7 +95,7 @@ const PropertyPanel = ({ selectedElement, onUpdateElement }) => {
               <label className="block text-sm font-medium text-gray-700 mb-2">Placeholder</label>
               <input
                 type="text"
-                value={selectedElement.placeholder || ''}
+                value={element.placeholder || ''}
                 onChange={(e) => handleChange('placeholder', e.target.value)}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                 placeholder="Enter placeholder text..."
@@ -95,7 +105,7 @@ const PropertyPanel = ({ selectedElement, onUpdateElement }) => {
               <input
                 type="checkbox"
                 id="required"
-                checked={selectedElement.required || false}
+                checked={element.required || false}
                 onChange={(e) => handleChange('required', e.target.checked)}
                 className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
               />
@@ -103,65 +113,18 @@ const PropertyPanel = ({ selectedElement, onUpdateElement }) => {
                 Required field
               </label>
             </div>
-            {selectedElement.type === 'select' && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Options (one per line)</label>
-                <textarea
-                  value={selectedElement.options?.join('\n') || ''}
-                  onChange={(e) => handleChange('options', e.target.value.split('\n').filter(option => option.trim()))}
-                  rows={4}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none"
-                  placeholder="Option 1&#10;Option 2&#10;Option 3"
-                />
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Layout Properties */}
-        {isLayoutComponent && (
-          <div className="space-y-4">
-            <h4 className="text-sm font-medium text-gray-900">Layout Properties</h4>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Width</label>
-              <select
-                value={selectedElement.width || 'full'}
-                onChange={(e) => handleChange('width', e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-              >
-                <option value="full">Full Width</option>
-                <option value="1/2">Half Width</option>
-                <option value="1/3">One Third</option>
-                <option value="2/3">Two Thirds</option>
-                <option value="1/4">Quarter Width</option>
-                <option value="3/4">Three Quarters</option>
-              </select>
-            </div>
-            {selectedElement.type === 'spacer' && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Height (px)</label>
-                <input
-                  type="number"
-                  value={selectedElement.height || 32}
-                  onChange={(e) => handleChange('height', parseInt(e.target.value))}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                  min="8"
-                  max="200"
-                />
-              </div>
-            )}
           </div>
         )}
 
         {/* Media Properties */}
-        {['image', 'video', 'gallery', 'carousel'].includes(selectedElement.type) && (
+        {isMediaComponent && (
           <div className="space-y-4">
             <h4 className="text-sm font-medium text-gray-900">Media Properties</h4>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Source URL</label>
               <input
                 type="url"
-                value={selectedElement.src || ''}
+                value={element.src || ''}
                 onChange={(e) => handleChange('src', e.target.value)}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                 placeholder="https://example.com/image.jpg"
@@ -171,11 +134,41 @@ const PropertyPanel = ({ selectedElement, onUpdateElement }) => {
               <label className="block text-sm font-medium text-gray-700 mb-2">Alt Text</label>
               <input
                 type="text"
-                value={selectedElement.alt || ''}
+                value={element.alt || ''}
                 onChange={(e) => handleChange('alt', e.target.value)}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                placeholder="Description of the image"
+                placeholder="Description of the media"
               />
+            </div>
+          </div>
+        )}
+
+        {/* Link Properties */}
+        {element.type === 'link' && (
+          <div className="space-y-4">
+            <h4 className="text-sm font-medium text-gray-900">Link Properties</h4>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">URL</label>
+              <input
+                type="url"
+                value={element.href || ''}
+                onChange={(e) => handleChange('href', e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                placeholder="https://example.com"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Target</label>
+              <select
+                value={element.target || '_self'}
+                onChange={(e) => handleChange('target', e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+              >
+                <option value="_self">Same Window</option>
+                <option value="_blank">New Window</option>
+                <option value="_parent">Parent Frame</option>
+                <option value="_top">Top Frame</option>
+              </select>
             </div>
           </div>
         )}
@@ -184,118 +177,132 @@ const PropertyPanel = ({ selectedElement, onUpdateElement }) => {
   };
 
   const renderStyleTab = () => {
+    const styles = element.styles || {};
+    
     return (
       <div className="space-y-6">
         <h4 className="text-sm font-medium text-gray-900">Styling</h4>
         
-        {/* Text Styling */}
-        {['heading', 'paragraph', 'button', 'link'].includes(selectedElement.type) && (
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Text Color</label>
-              <input
-                type="color"
-                value={selectedElement.textColor || '#000000'}
-                onChange={(e) => handleChange('textColor', e.target.value)}
-                className="w-full h-10 border border-gray-300 rounded-lg cursor-pointer"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Font Size</label>
-              <select
-                value={selectedElement.fontSize || 'medium'}
-                onChange={(e) => handleChange('fontSize', e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-              >
-                <option value="small">Small</option>
-                <option value="medium">Medium</option>
-                <option value="large">Large</option>
-                <option value="xl">Extra Large</option>
-                <option value="2xl">2XL</option>
-                <option value="3xl">3XL</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Font Weight</label>
-              <select
-                value={selectedElement.fontWeight || 'normal'}
-                onChange={(e) => handleChange('fontWeight', e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-              >
-                <option value="light">Light</option>
-                <option value="normal">Normal</option>
-                <option value="medium">Medium</option>
-                <option value="semibold">Semibold</option>
-                <option value="bold">Bold</option>
-              </select>
-            </div>
-          </div>
-        )}
-
-        {/* Background Styling */}
+        {/* Typography */}
         <div className="space-y-4">
+          <h5 className="text-xs font-medium text-gray-700 uppercase tracking-wide">Typography</h5>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Font Size (px)</label>
+            <input
+              type="number"
+              value={styles.fontSize || ''}
+              onChange={(e) => handleStyleChange('fontSize', e.target.value + 'px')}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+              placeholder="16"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Font Weight</label>
+            <select
+              value={styles.fontWeight || 'normal'}
+              onChange={(e) => handleStyleChange('fontWeight', e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+            >
+              <option value="normal">Normal</option>
+              <option value="bold">Bold</option>
+              <option value="100">100</option>
+              <option value="200">200</option>
+              <option value="300">300</option>
+              <option value="400">400</option>
+              <option value="500">500</option>
+              <option value="600">600</option>
+              <option value="700">700</option>
+              <option value="800">800</option>
+              <option value="900">900</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Text Align</label>
+            <select
+              value={styles.textAlign || 'left'}
+              onChange={(e) => handleStyleChange('textAlign', e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+            >
+              <option value="left">Left</option>
+              <option value="center">Center</option>
+              <option value="right">Right</option>
+              <option value="justify">Justify</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Colors */}
+        <div className="space-y-4">
+          <h5 className="text-xs font-medium text-gray-700 uppercase tracking-wide">Colors</h5>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Text Color</label>
+            <input
+              type="color"
+              value={styles.color || '#000000'}
+              onChange={(e) => handleStyleChange('color', e.target.value)}
+              className="w-full h-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+            />
+          </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Background Color</label>
             <input
               type="color"
-              value={selectedElement.backgroundColor || '#ffffff'}
-              onChange={(e) => handleChange('backgroundColor', e.target.value)}
-              className="w-full h-10 border border-gray-300 rounded-lg cursor-pointer"
+              value={styles.backgroundColor || '#ffffff'}
+              onChange={(e) => handleStyleChange('backgroundColor', e.target.value)}
+              className="w-full h-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
             />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Border Color</label>
-            <input
-              type="color"
-              value={selectedElement.borderColor || '#e5e7eb'}
-              onChange={(e) => handleChange('borderColor', e.target.value)}
-              className="w-full h-10 border border-gray-300 rounded-lg cursor-pointer"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Border Width</label>
-            <select
-              value={selectedElement.borderWidth || '1'}
-              onChange={(e) => handleChange('borderWidth', e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-            >
-              <option value="0">None</option>
-              <option value="1">Thin</option>
-              <option value="2">Medium</option>
-              <option value="4">Thick</option>
-            </select>
           </div>
         </div>
 
         {/* Spacing */}
         <div className="space-y-4">
+          <h5 className="text-xs font-medium text-gray-700 uppercase tracking-wide">Spacing</h5>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Padding (px)</label>
+              <input
+                type="number"
+                value={styles.padding || ''}
+                onChange={(e) => handleStyleChange('padding', e.target.value + 'px')}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                placeholder="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Margin (px)</label>
+              <input
+                type="number"
+                value={styles.margin || ''}
+                onChange={(e) => handleStyleChange('margin', e.target.value + 'px')}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                placeholder="0"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Border */}
+        <div className="space-y-4">
+          <h5 className="text-xs font-medium text-gray-700 uppercase tracking-wide">Border</h5>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Padding</label>
-            <select
-              value={selectedElement.padding || '4'}
-              onChange={(e) => handleChange('padding', e.target.value)}
+            <label className="block text-sm font-medium text-gray-700 mb-2">Border Width (px)</label>
+            <input
+              type="number"
+              value={styles.borderWidth || ''}
+              onChange={(e) => handleStyleChange('borderWidth', e.target.value + 'px')}
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-            >
-              <option value="0">None</option>
-              <option value="2">Small</option>
-              <option value="4">Medium</option>
-              <option value="6">Large</option>
-              <option value="8">Extra Large</option>
-            </select>
+              placeholder="0"
+            />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Margin</label>
-            <select
-              value={selectedElement.margin || '0'}
-              onChange={(e) => handleChange('margin', e.target.value)}
+            <label className="block text-sm font-medium text-gray-700 mb-2">Border Radius (px)</label>
+            <input
+              type="number"
+              value={styles.borderRadius || ''}
+              onChange={(e) => handleStyleChange('borderRadius', e.target.value + 'px')}
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-            >
-              <option value="0">None</option>
-              <option value="2">Small</option>
-              <option value="4">Medium</option>
-              <option value="6">Large</option>
-              <option value="8">Extra Large</option>
-            </select>
+              placeholder="0"
+            />
           </div>
         </div>
       </div>
@@ -305,62 +312,46 @@ const PropertyPanel = ({ selectedElement, onUpdateElement }) => {
   const renderAdvancedTab = () => {
     return (
       <div className="space-y-6">
-        <h4 className="text-sm font-medium text-gray-900">Advanced Settings</h4>
+        <h4 className="text-sm font-medium text-gray-900">Advanced Properties</h4>
         
+        {/* Element ID */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Element ID</label>
+          <input
+            type="text"
+            value={element.id || ''}
+            onChange={(e) => handleChange('id', e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+            placeholder="unique-id"
+          />
+        </div>
+
+        {/* CSS Classes */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">CSS Classes</label>
           <input
             type="text"
-            value={selectedElement.className || ''}
+            value={element.className || ''}
             onChange={(e) => handleChange('className', e.target.value)}
             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-            placeholder="custom-class another-class"
+            placeholder="class1 class2 class3"
           />
         </div>
 
+        {/* Custom CSS */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">ID</label>
-          <input
-            type="text"
-            value={selectedElement.id || ''}
-            onChange={(e) => handleChange('id', e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-            placeholder="unique-element-id"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Custom Attributes</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Custom CSS</label>
           <textarea
-            value={selectedElement.customAttributes || ''}
-            onChange={(e) => handleChange('customAttributes', e.target.value)}
-            rows={3}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none"
-            placeholder="data-custom='value'&#10;aria-label='description'"
+            value={element.customCSS || ''}
+            onChange={(e) => handleChange('customCSS', e.target.value)}
+            rows={6}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none font-mono text-xs"
+            placeholder="/* Custom CSS styles */"
           />
-        </div>
-
-        <div className="flex items-center">
-          <input
-            type="checkbox"
-            id="hidden"
-            checked={selectedElement.hidden || false}
-            onChange={(e) => handleChange('hidden', e.target.checked)}
-            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-          />
-          <label htmlFor="hidden" className="ml-2 text-sm text-gray-700">
-            Hide element
-          </label>
         </div>
       </div>
     );
   };
-
-  const tabs = [
-    { id: 'content', name: 'Content', icon: '📝' },
-    { id: 'style', name: 'Style', icon: '🎨' },
-    { id: 'advanced', name: 'Advanced', icon: '⚙️' }
-  ];
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -377,44 +368,53 @@ const PropertyPanel = ({ selectedElement, onUpdateElement }) => {
 
   return (
     <div className="w-80 bg-white border-l border-gray-200 flex flex-col">
-      <div className="p-6 border-b border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">Properties</h3>
-        <p className="text-sm text-gray-600 capitalize">
-          {selectedElement.type} element
+      {/* Header */}
+      <div className="p-4 border-b border-gray-200">
+        <h3 className="text-lg font-semibold text-gray-900">Properties</h3>
+        <p className="text-sm text-gray-500 mt-1">
+          {element.type.charAt(0).toUpperCase() + element.type.slice(1)} Element
         </p>
       </div>
 
-      {/* Tab Navigation */}
+      {/* Tabs */}
       <div className="px-4 py-3 border-b border-gray-200">
         <div className="flex space-x-1">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-                activeTab === tab.id
-                  ? 'bg-blue-100 text-blue-700'
-                  : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              <span className="mr-2">{tab.icon}</span>
-              {tab.name}
-            </button>
-          ))}
+          <button
+            onClick={() => setActiveTab('content')}
+            className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+              activeTab === 'content'
+                ? 'bg-blue-100 text-blue-700'
+                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            Content
+          </button>
+          <button
+            onClick={() => setActiveTab('style')}
+            className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+              activeTab === 'style'
+                ? 'bg-blue-100 text-blue-700'
+                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            Style
+          </button>
+          <button
+            onClick={() => setActiveTab('advanced')}
+            className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+              activeTab === 'advanced'
+                ? 'bg-blue-100 text-blue-700'
+                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            Advanced
+          </button>
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-6">
+      {/* Content */}
+      <div className="flex-1 overflow-y-auto p-4">
         {renderTabContent()}
-      </div>
-
-      {/* Element Info */}
-      <div className="p-4 border-t border-gray-200 bg-gray-50">
-        <div className="text-xs text-gray-500 space-y-1">
-          <p><strong>Type:</strong> {selectedElement.type}</p>
-          <p><strong>ID:</strong> {selectedElement.id}</p>
-          <p><strong>Position:</strong> {selectedElement.position || 'Auto'}</p>
-        </div>
       </div>
     </div>
   );

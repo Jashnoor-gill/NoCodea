@@ -4,6 +4,11 @@ const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
 const User = require('../models/User');
 const auth = require('../middleware/auth');
+const emailService = require('../services/emailService');
+const bcrypt = require('bcryptjs');
+const FailedLogin = require('../models/FailedLogin');
+const crypto = require('crypto');
+const SiteSettings = require('../models/SiteSettings');
 
 const router = express.Router();
 
@@ -18,65 +23,77 @@ const generateToken = (userId) => {
 // @desc    Register a new user
 // @access  Public
 router.post('/register', [
-  body('name')
-    .trim()
-    .isLength({ min: 2, max: 50 })
-    .withMessage('Name must be between 2 and 50 characters'),
-  body('email')
-    .isEmail()
-    .normalizeEmail()
-    .withMessage('Please provide a valid email'),
-  body('password')
-    .isLength({ min: 6 })
-    .withMessage('Password must be at least 6 characters long')
+  body('name', 'Name is required').not().isEmpty(),
+  body('email', 'Please include a valid email').isEmail(),
+  body('password', 'Please enter a password with 6 or more characters').isLength({ min: 6 })
 ], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ 
+      success: false,
+      errors: errors.array() 
+    });
+  }
+
+  const { name, email, password } = req.body;
+
   try {
-    // Check for validation errors
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        message: 'Validation Error',
-        errors: errors.array()
-      });
-    }
-
-    const { name, email, password } = req.body;
-
     // Check if user already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
+    let user = await User.findOne({ email });
+    if (user) {
       return res.status(400).json({
         success: false,
-        message: 'User with this email already exists'
+        message: 'User already exists'
       });
     }
 
     // Create new user
-    const user = new User({
+    user = new User({
       name,
       email,
       password
     });
 
+    // Hash password
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
+
     await user.save();
 
-    // Generate token
-    const token = generateToken(user._id);
+    // Send welcome email
+    try {
+      await emailService.sendWelcomeEmail(user);
+    } catch (emailError) {
+      console.error('Welcome email error:', emailError);
+      // Don't fail registration if email fails
+    }
 
-    // Update last login
-    user.lastLogin = new Date();
-    await user.save();
+    // Create JWT token
+    const payload = {
+      user: {
+        id: user.id
+      }
+    };
 
-    res.status(201).json({
-      success: true,
-      message: 'User registered successfully',
-      token,
-      user: user.getProfile()
-    });
-
-  } catch (error) {
-    console.error('Registration error:', error);
+    jwt.sign(
+      payload,
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' },
+      (err, token) => {
+        if (err) throw err;
+        res.json({
+          success: true,
+          token,
+          user: {
+            id: user.id,
+            name: user.name,
+            email: user.email
+          }
+        });
+      }
+    );
+  } catch (err) {
+    console.error('Registration error:', err.message);
     res.status(500).json({
       success: false,
       message: 'Server error during registration'
@@ -88,61 +105,83 @@ router.post('/register', [
 // @desc    Login user
 // @access  Public
 router.post('/login', [
-  body('email')
-    .isEmail()
-    .normalizeEmail()
-    .withMessage('Please provide a valid email'),
-  body('password')
-    .notEmpty()
-    .withMessage('Password is required')
+  body('email', 'Please include a valid email').isEmail(),
+  body('password', 'Password is required').exists()
 ], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ 
+      success: false,
+      errors: errors.array() 
+    });
+  }
+
+  const { email, password } = req.body;
+  const clientIp = req.ip || req.connection.remoteAddress;
+
   try {
-    // Check for validation errors
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
+    // Check if account is locked due to too many failed attempts
+    const isLocked = await FailedLogin.isAccountLocked(email, clientIp);
+    if (isLocked) {
+      return res.status(429).json({
+        success: false,
+        message: 'Too many login attempts, try again in one hour!'
+      });
+    }
+
+    // Check if user exists
+    const user = await User.findOne({ email });
+    if (!user) {
+      // Log failed attempt
+      await FailedLogin.logFailed({ email, lastIp: clientIp });
+      
       return res.status(400).json({
         success: false,
-        message: 'Validation Error',
-        errors: errors.array()
+        message: 'Authentication failed, wrong email or password!'
       });
     }
 
-    const { email, password } = req.body;
-
-    // Find user and include password for comparison
-    const user = await User.findOne({ email }).select('+password');
-    if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid credentials'
-      });
-    }
-
-    // Check password
-    const isMatch = await user.comparePassword(password);
+    // Validate password
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({
+      // Log failed attempt
+      await FailedLogin.logFailed({ email, lastIp: clientIp });
+      
+      return res.status(400).json({
         success: false,
-        message: 'Invalid credentials'
+        message: 'Authentication failed, wrong email or password!'
       });
     }
 
-    // Generate token
-    const token = generateToken(user._id);
+    // Clear failed attempts on successful login
+    await FailedLogin.clearFailedAttempts(email, clientIp);
 
-    // Update last login
-    user.lastLogin = new Date();
-    await user.save();
+    // Create JWT token
+    const payload = {
+      user: {
+        id: user.id
+      }
+    };
 
-    res.json({
-      success: true,
-      message: 'Login successful',
-      token,
-      user: user.getProfile()
-    });
-
-  } catch (error) {
-    console.error('Login error:', error);
+    jwt.sign(
+      payload,
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' },
+      (err, token) => {
+        if (err) throw err;
+        res.json({
+          success: true,
+          token,
+          user: {
+            id: user.id,
+            name: user.name,
+            email: user.email
+          }
+        });
+      }
+    );
+  } catch (err) {
+    console.error('Login error:', err.message);
     res.status(500).json({
       success: false,
       message: 'Server error during login'
@@ -180,7 +219,7 @@ router.get('/google/callback',
 // @access  Private
 router.get('/me', auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user.id).select('-password');
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -205,123 +244,58 @@ router.get('/me', auth, async (req, res) => {
 // @route   POST /api/auth/forgot-password
 // @desc    Send password reset email
 // @access  Public
-router.post('/forgot-password', [
-  body('email')
-    .isEmail()
-    .normalizeEmail()
-    .withMessage('Please provide a valid email')
-], async (req, res) => {
+router.post('/forgot-password', async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        message: 'Validation Error',
-        errors: errors.array()
-      });
-    }
-
     const { email } = req.body;
 
-    const user = await User.findOne({ email });
+    if (!email) {
+      return res.status(400).json({ success: false, message: 'Email is required' });
+    }
+
+    // Find user by email
+    const user = await User.findOne({ email: email.toLowerCase() });
+    
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'User with this email not found'
-      });
+      return res.status(404).json({ success: false, message: 'Email not found' });
     }
 
     // Generate reset token
-    const resetToken = require('crypto').randomBytes(32).toString('hex');
-    user.resetPasswordToken = resetToken;
-    user.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // 10 minutes
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetTokenExpiry = new Date(Date.now() + 3600000); // 1 hour
 
-    await user.save();
+    // Update user with reset token
+    await User.findByIdAndUpdate(user._id, {
+      resetToken: resetToken,
+      resetTokenExpiry: resetTokenExpiry
+    });
 
-    // Send email with reset link
-    const nodemailer = require('nodemailer');
+    // Get site settings for email configuration
+    const siteSettings = await SiteSettings.findOne();
     
-    // Create transporter
-    const transporter = nodemailer.createTransporter({
-      host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-      port: process.env.EMAIL_PORT || 587,
-      secure: false, // true for 465, false for other ports
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
+    // Create reset URL
+    const resetUrl = `${req.protocol}://${req.get('host')}/?token=${resetToken}&user=${user.username}`;
 
-    // Email content
-    const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: 'Password Reset Request - NoCodea Website Builder',
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; text-align: center; color: white;">
-            <h1 style="margin: 0; font-size: 24px;">NoCodea Website Builder</h1>
-            <p style="margin: 10px 0 0 0; opacity: 0.9;">Password Reset Request</p>
-          </div>
-          
-          <div style="padding: 30px; background: #f9f9f9;">
-            <h2 style="color: #333; margin-bottom: 20px;">Hello ${user.name},</h2>
-            
-            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
-              You requested a password reset for your NoCodea Website Builder account. 
-              Click the button below to reset your password:
-            </p>
-            
-            <div style="text-align: center; margin: 30px 0;">
-              <a href="${resetUrl}" 
-                 style="background: #667eea; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
-                Reset Password
-              </a>
-            </div>
-            
-            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
-              If the button doesn't work, copy and paste this link into your browser:
-            </p>
-            
-            <p style="background: #eee; padding: 15px; border-radius: 5px; word-break: break-all; color: #333;">
-              ${resetUrl}
-            </p>
-            
-            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
-              This link will expire in 10 minutes for security reasons.
-            </p>
-            
-            <p style="color: #666; line-height: 1.6;">
-              If you didn't request this password reset, please ignore this email. 
-              Your password will remain unchanged.
-            </p>
-          </div>
-          
-          <div style="background: #333; padding: 20px; text-align: center; color: white;">
-            <p style="margin: 0; font-size: 14px; opacity: 0.8;">
-              © 2024 NoCodea Website Builder. All rights reserved.
-            </p>
-          </div>
-        </div>
-      `
-    };
-
-    // Send email
-    await transporter.sendMail(mailOptions);
-
-    res.json({
-      success: true,
-      message: 'Password reset email sent successfully'
-    });
+    // Send reset email
+    try {
+      await emailService.sendPasswordReset(user, resetToken);
+      
+      res.json({ 
+        success: true, 
+        message: 'Reset email sent successfully' 
+      });
+    } catch (emailError) {
+      console.error('Email sending error:', emailError);
+      res.status(500).json({ 
+        success: false, 
+        message: 'Error sending reset email' 
+      });
+    }
 
   } catch (error) {
     console.error('Forgot password error:', error);
-    
-    // If email sending fails, still return success to prevent email enumeration
-    res.json({
-      success: true,
-      message: 'Password reset email sent'
+    res.status(500).json({ 
+      success: false, 
+      message: 'Internal server error' 
     });
   }
 });
@@ -329,55 +303,67 @@ router.post('/forgot-password', [
 // @route   POST /api/auth/reset-password
 // @desc    Reset password with token
 // @access  Public
-router.post('/reset-password', [
-  body('token')
-    .notEmpty()
-    .withMessage('Reset token is required'),
-  body('password')
-    .isLength({ min: 6 })
-    .withMessage('Password must be at least 6 characters long')
-], async (req, res) => {
+router.post('/reset-password', async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        message: 'Validation Error',
-        errors: errors.array()
+    const { token, password } = req.body;
+
+    if (!token || !password) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Token and password are required' 
       });
     }
 
-    const { token, password } = req.body;
+    if (password.length < 6) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Password must be at least 6 characters long' 
+      });
+    }
 
+    // Find user by reset token and check expiry
     const user = await User.findOne({
-      resetPasswordToken: token,
-      resetPasswordExpire: { $gt: Date.now() }
+      resetToken: token,
+      resetTokenExpiry: { $gt: Date.now() }
     });
 
     if (!user) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid or expired reset token'
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Invalid or expired token' 
       });
     }
 
-    // Set new password
-    user.password = password;
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpire = undefined;
+    // Hash new password
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    await user.save();
+    // Update user password and clear reset token
+    await User.findByIdAndUpdate(user._id, {
+      password: hashedPassword,
+      resetToken: null,
+      resetTokenExpiry: null
+    });
 
-    res.json({
-      success: true,
-      message: 'Password reset successful'
+    // Send confirmation email
+    try {
+      const siteSettings = await SiteSettings.findOne();
+      await emailService.sendPasswordResetSuccess(user, password);
+    } catch (emailError) {
+      console.error('Confirmation email error:', emailError);
+      // Don't fail the request if confirmation email fails
+    }
+
+    res.json({ 
+      success: true, 
+      message: 'Password reset successfully' 
     });
 
   } catch (error) {
     console.error('Reset password error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error'
+    res.status(500).json({ 
+      success: false, 
+      message: 'Internal server error' 
     });
   }
 });
@@ -453,6 +439,11 @@ router.put('/update-profile', auth, [
       message: 'Server error'
     });
   }
+});
+
+// Test route to verify auth route is loaded
+router.get('/test', (req, res) => {
+  res.send('Auth route is working!');
 });
 
 module.exports = router; 

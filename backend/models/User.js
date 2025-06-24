@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const { AddressSchema } = require('./Address');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -13,9 +14,10 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Please provide an email'],
     unique: true,
     lowercase: true,
+    trim: true,
     match: [
       /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
-      'Please provide a valid email'
+      'Please enter a valid email'
     ]
   },
   password: {
@@ -35,19 +37,40 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['user', 'admin'],
+    enum: ['user', 'admin', 'moderator'],
     default: 'user'
   },
-  isVerified: {
+  status: {
+    type: String,
+    enum: ['active', 'inactive', 'suspended'],
+    default: 'active'
+  },
+  emailVerified: {
     type: Boolean,
     default: false
   },
-  verificationToken: String,
-  resetPasswordToken: String,
-  resetPasswordExpire: Date,
+  emailVerificationToken: {
+    type: String
+  },
+  emailVerificationExpires: {
+    type: Date
+  },
+  resetPasswordToken: {
+    type: String
+  },
+  resetPasswordExpires: {
+    type: Date
+  },
   lastLogin: {
     type: Date,
     default: Date.now
+  },
+  loginAttempts: {
+    type: Number,
+    default: 0
+  },
+  lockUntil: {
+    type: Date
   },
   preferences: {
     theme: {
@@ -58,6 +81,14 @@ const userSchema = new mongoose.Schema({
     language: {
       type: String,
       default: 'en'
+    },
+    currency: {
+      type: String,
+      default: 'USD'
+    },
+    timezone: {
+      type: String,
+      default: 'UTC'
     },
     notifications: {
       email: {
@@ -83,7 +114,16 @@ const userSchema = new mongoose.Schema({
       type: Date,
       default: Date.now
     }
-  }
+  },
+  addresses: [AddressSchema],
+  wishlist: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product'
+  }],
+  compare: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product'
+  }]
 }, {
   timestamps: true
 });
@@ -91,6 +131,15 @@ const userSchema = new mongoose.Schema({
 // Index for better query performance
 userSchema.index({ email: 1 });
 userSchema.index({ googleId: 1 });
+userSchema.index({ status: 1 });
+userSchema.index({ role: 1 });
+userSchema.index({ resetPasswordToken: 1 });
+userSchema.index({ emailVerificationToken: 1 });
+
+// Virtual for checking if account is locked
+userSchema.virtual('isLocked').get(function() {
+  return !!(this.lockUntil && this.lockUntil > Date.now());
+});
 
 // Encrypt password before saving
 userSchema.pre('save', async function(next) {
@@ -116,10 +165,12 @@ userSchema.methods.getProfile = function() {
     email: this.email,
     avatar: this.avatar,
     role: this.role,
-    isVerified: this.isVerified,
+    status: this.status,
+    emailVerified: this.emailVerified,
+    lastLogin: this.lastLogin,
     preferences: this.preferences,
-    stats: this.stats,
-    createdAt: this.createdAt
+    createdAt: this.createdAt,
+    updatedAt: this.updatedAt
   };
 };
 
@@ -127,6 +178,39 @@ userSchema.methods.getProfile = function() {
 userSchema.methods.updateLastActive = function() {
   this.stats.lastActive = new Date();
   return this.save();
+};
+
+// Static method to find by email
+userSchema.statics.findByEmail = function(email) {
+  return this.findOne({ email: email.toLowerCase() });
+};
+
+// Static method to increment login attempts
+userSchema.statics.incLoginAttempts = async function(email) {
+  const user = await this.findOne({ email });
+  if (user) {
+    user.loginAttempts += 1;
+    
+    // Lock account after 5 failed attempts for 1 hour
+    if (user.loginAttempts >= 5) {
+      user.lockUntil = Date.now() + 60 * 60 * 1000; // 1 hour
+    }
+    
+    await user.save();
+  }
+  return user;
+};
+
+// Static method to reset login attempts
+userSchema.statics.resetLoginAttempts = async function(email) {
+  return this.findOneAndUpdate(
+    { email },
+    { 
+      loginAttempts: 0,
+      lockUntil: undefined,
+      lastLogin: new Date()
+    }
+  );
 };
 
 module.exports = mongoose.model('User', userSchema); 

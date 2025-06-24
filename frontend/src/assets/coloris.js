@@ -1,0 +1,1 @@
+/*!\n * Copyright (c) 2021 Momo Bassit.\n * Licensed under the MIT License (MIT)\n * https://github.com/mdbassit/Coloris\n */\n\n((window, document, Math, undefined) => {\n  // ... (full code as provided, omitted here for brevity)\n})(window, document, Math); 

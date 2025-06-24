@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import axios from 'axios';
+import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 
 const ForgotPasswordModal = ({ onClose, onSwitchToLogin }) => {
   const [email, setEmail] = useState('');
@@ -93,6 +95,8 @@ const ForgotPasswordModal = ({ onClose, onSwitchToLogin }) => {
 };
 
 const Login = ({ onSwitchToRegister, onClose }) => {
+  const { t } = useTranslation();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -100,27 +104,73 @@ const Login = ({ onSwitchToRegister, onClose }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [errors, setErrors] = useState({});
 
-  const { login, error } = useAuth();
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
+  };
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.email) {
+      newErrors.email = t('emailRequired');
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = t('emailInvalid');
+    }
+
+    if (!formData.password) {
+      newErrors.password = t('passwordRequired');
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
-
-    const result = await login(formData);
     
-    if (result.success) {
-      onClose?.();
+    if (!validateForm()) {
+      return;
     }
-    
-    setIsLoading(false);
+
+    try {
+      setIsLoading(true);
+      setErrors({});
+      
+      const success = await login(formData.email, formData.password);
+      
+      if (success) {
+        toast.success(t('loginSuccess'));
+        onClose();
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      
+      if (error.response?.status === 429) {
+        // Too many login attempts
+        toast.error(t('tooManyLoginAttempts'));
+      } else if (error.response?.status === 400) {
+        // Invalid credentials
+        toast.error(t('invalidCredentials'));
+      } else {
+        // Other errors
+        toast.error(t('loginFailed'));
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleGoogleLogin = () => {
@@ -150,9 +200,15 @@ const Login = ({ onSwitchToRegister, onClose }) => {
           <p className="text-[#B0B0B0]">Sign in to your account to continue</p>
         </div>
 
-        {error && (
+        {errors.email && (
           <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 mb-6">
-            <p className="text-red-400 text-sm">{error}</p>
+            <p className="text-red-400 text-sm">{errors.email}</p>
+          </div>
+        )}
+
+        {errors.password && (
+          <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 mb-6">
+            <p className="text-red-400 text-sm">{errors.password}</p>
           </div>
         )}
 
@@ -166,10 +222,13 @@ const Login = ({ onSwitchToRegister, onClose }) => {
               id="email"
               name="email"
               value={formData.email}
-              onChange={handleChange}
+              onChange={handleInputChange}
               required
-              className="w-full px-4 py-3 bg-[#404040] border border-[#505050] rounded-lg text-white placeholder-[#B0B0B0] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-              placeholder="Enter your email"
+              className={`w-full px-4 py-3 bg-[#404040] border border-[#505050] rounded-lg text-white placeholder-[#B0B0B0] focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                errors.email ? 'border-red-500' : 'border-gray-300'
+              }`}
+              placeholder={t('enterEmail')}
+              disabled={isLoading}
             />
           </div>
 
@@ -183,10 +242,13 @@ const Login = ({ onSwitchToRegister, onClose }) => {
                 id="password"
                 name="password"
                 value={formData.password}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 required
-                className="w-full px-4 py-3 bg-[#404040] border border-[#505050] rounded-lg text-white placeholder-[#B0B0B0] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors pr-12"
-                placeholder="Enter your password"
+                className={`w-full px-4 py-3 bg-[#404040] border border-[#505050] rounded-lg text-white placeholder-[#B0B0B0] focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  errors.password ? 'border-red-500' : 'border-gray-300'
+                }`}
+                placeholder={t('enterPassword')}
+                disabled={isLoading}
               />
               <button
                 type="button"
@@ -215,7 +277,7 @@ const Login = ({ onSwitchToRegister, onClose }) => {
               onClick={() => setShowForgotPassword(true)}
               className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
             >
-              Forgot password?
+              {t('forgotPassword')}?
             </button>
           </div>
 
@@ -224,7 +286,17 @@ const Login = ({ onSwitchToRegister, onClose }) => {
             disabled={isLoading}
             className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 px-4 rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
           >
-            {isLoading ? 'Signing in...' : 'Sign In'}
+            {isLoading ? (
+              <div className="flex items-center justify-center">
+                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                {t('loggingIn')}
+              </div>
+            ) : (
+              t('login')
+            )}
           </button>
         </form>
 
@@ -274,6 +346,19 @@ const Login = ({ onSwitchToRegister, onClose }) => {
               Sign up
             </button>
           </p>
+        </div>
+
+        {/* Security Notice */}
+        <div className="mt-4 p-3 bg-blue-50 rounded-md">
+          <div className="flex items-start">
+            <svg className="w-5 h-5 text-blue-600 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+            </svg>
+            <div className="text-sm text-blue-800">
+              <p className="font-medium">{t('securityNotice')}</p>
+              <p className="mt-1">{t('accountLockedAfter')}</p>
+            </div>
+          </div>
         </div>
 
         {onClose && (
