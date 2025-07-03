@@ -197,7 +197,6 @@ const UserDashboard = () => {
             
             <Link
               to="/user/addresses/new"
-              to="/products"
               className="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
             >
               <span className="text-2xl">🛍️</span>
