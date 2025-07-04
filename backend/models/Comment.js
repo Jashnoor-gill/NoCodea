@@ -1,31 +1,9 @@
 const mongoose = require('mongoose');
-const { Schema } = mongoose;
 
-const CommentSchema = new Schema({
-  content: {
-    type: String,
-    required: true,
-  },
-  author: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
-  post: {
-    type: Schema.Types.ObjectId,
-    ref: 'Post',
-    required: true,
-  },
-  parent: {
-    type: Schema.Types.ObjectId,
-    ref: 'Comment',
-    default: null,
-  },
-  status: {
-    type: String,
-    enum: ['pending', 'approved', 'rejected'],
-    default: 'pending',
-  },
+const CommentSchema = new mongoose.Schema({
+  post: { type: mongoose.Schema.Types.ObjectId, ref: 'Post' },
+  author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  content: { type: String, required: true },
 }, { timestamps: true });
 
 // Index for efficient comment retrieval for a post

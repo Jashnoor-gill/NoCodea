@@ -10,6 +10,7 @@ const Country = require('../models/Country');
 const Region = require('../models/Region');
 const path = require('path');
 const fs = require('fs');
+const bcrypt = require('bcryptjs');
 
 // @route   GET api/users/me
 // @desc    Get current user's profile
@@ -481,6 +482,57 @@ router.get('/:id', async (req, res) => {
         }
         res.status(500).send('Server Error');
     }
+});
+
+// @route   DELETE api/users/me
+// @desc    Delete current user's account and related data
+// @access  Private
+router.delete('/me', authMiddleware, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    // Delete related addresses
+    await Address.deleteMany({ user: userId });
+    // Delete related comments
+    await Comment.deleteMany({ user: userId });
+    // Delete related digital assets
+    await DigitalAsset.deleteMany({ user: userId });
+    // TODO: Delete other related data if needed (orders, etc.)
+    // Delete the user
+    await User.findByIdAndDelete(userId);
+    res.json({ success: true, message: 'Account deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting user account:', error);
+    res.status(500).json({ success: false, message: 'Error deleting account' });
+  }
+});
+
+// @route   PUT api/users/change-password
+// @desc    Change password for authenticated user
+// @access  Private
+router.put('/change-password', authMiddleware, async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json({ success: false, message: 'Old and new password are required' });
+    }
+    if (newPassword.length < 6) {
+      return res.status(400).json({ success: false, message: 'New password must be at least 6 characters' });
+    }
+    const user = await User.findById(req.user.id).select('+password');
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ success: false, message: 'Old password is incorrect' });
+    }
+    user.password = await bcrypt.hash(newPassword, 10);
+    await user.save();
+    res.json({ success: true, message: 'Password changed successfully' });
+  } catch (error) {
+    console.error('Error changing password:', error);
+    res.status(500).json({ success: false, message: 'Error changing password' });
+  }
 });
 
 module.exports = router; 

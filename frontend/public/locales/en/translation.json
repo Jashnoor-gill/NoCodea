@@ -333,5 +333,10 @@
   "passwordResetSuccess": "Password reset successfully!",
   "passwordResetFailed": "Failed to reset password. Please try again.",
   "backToLogin": "Back to Login",
-  "resetEmailSecurity": "This reset link will expire in 1 hour. If you didn't request this, please ignore this email."
+  "resetEmailSecurity": "This reset link will expire in 1 hour. If you didn't request this, please ignore this email.",
+  "accountDeletedSuccess": "Your account has been deleted successfully.",
+  "accountDeletionFailed": "Failed to delete your account. Please try again.",
+  "passwordChangeSuccess": "Password changed successfully!",
+  "passwordChangeFailed": "Failed to change password. Please try again.",
+  "oldPassword": "Old Password"
 } 

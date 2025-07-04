@@ -129,8 +129,8 @@ const LandingPage = ({ onGetStarted, onTryEditor }) => {
         <div className="bg-[#1A1A1A] py-1 px-4 w-full">
           <div className="flex justify-between items-center text-xs text-[#A0A0A0] w-full">
             <div className="flex items-center space-x-4">
-              <span>+00 (123) 123 1111</span>
-              <span>admin@vivvweb.com</span>
+              <span>+91 9888070040</span>
+              <span>jashnoors77@gmail.com</span>
             </div>
             <div className="hidden md:flex items-center space-x-4">
               <span>Free shipping on orders over $50</span>
@@ -154,7 +154,7 @@ const LandingPage = ({ onGetStarted, onTryEditor }) => {
               <a href="#" className="text-white hover:text-blue-400 transition-colors duration-200">Home</a>
               <a href="#" className="text-white hover:text-blue-400 transition-colors duration-200">About</a>
               <a href="#" className="text-white hover:text-blue-400 transition-colors duration-200">Shop</a>
-              <a href="#" className="text-white hover:text-blue-400 transition-colors duration-200">Vivv mega menu</a>
+              <a href="#" className="text-white hover:text-blue-400 transition-colors duration-200">Menu</a>
               <a href="#" className="text-white hover:text-blue-400 transition-colors duration-200">Services</a>
               <a href="#" className="text-white hover:text-blue-400 transition-colors duration-200">Blog</a>
               <a href="#" className="text-white hover:text-blue-400 transition-colors duration-200">Contact</a>
@@ -217,7 +217,7 @@ const LandingPage = ({ onGetStarted, onTryEditor }) => {
               <a href="#" className="block text-white hover:text-blue-400 transition-colors duration-200">Home</a>
               <a href="#" className="block text-white hover:text-blue-400 transition-colors duration-200">About</a>
               <a href="#" className="block text-white hover:text-blue-400 transition-colors duration-200">Shop</a>
-              <a href="#" className="block text-white hover:text-blue-400 transition-colors duration-200">Vivv mega menu</a>
+              <a href="#" className="block text-white hover:text-blue-400 transition-colors duration-200">Menu</a>
               <a href="#" className="block text-white hover:text-blue-400 transition-colors duration-200">Services</a>
               <a href="#" className="block text-white hover:text-blue-400 transition-colors duration-200">Blog</a>
               <a href="#" className="block text-white hover:text-blue-400 transition-colors duration-200">Contact</a>

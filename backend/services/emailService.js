@@ -194,11 +194,11 @@ class EmailService {
 
       return await this.sendEmail({
         to: user.email,
-        subject: `Welcome to ${siteName}!`,
+        subject: `NoCodea to ${siteName}!`,
         html
       });
     } catch (error) {
-      console.error('Welcome email error:', error);
+      console.error('NoCodea email error:', error);
       return { success: false, error: error.message };
     }
   }
@@ -410,7 +410,7 @@ class EmailService {
       <html>
       <head>
         <meta charset="utf-8">
-        <title>Welcome to ${data.siteName}</title>
+        <title>NoCodea to ${data.siteName}</title>
         <style>
           body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
           .container { max-width: 600px; margin: 0 auto; padding: 20px; }
@@ -423,11 +423,10 @@ class EmailService {
       <body>
         <div class="container">
           <div class="header">
-            <h1>Welcome to ${data.siteName}!</h1>
+            <h1>NoCodea to ${data.siteName}!</h1>
           </div>
           <div class="content">
-            <p>Dear ${data.customerName},</p>
-            <p>Welcome to ${data.siteName}! We're excited to have you on board.</p>
+            <p>NoCodea to ${data.siteName}! We're excited to have you on board.</p>
             <p>Your account has been successfully created with the email: ${data.customerEmail}</p>
             <p>You can now:</p>
             <ul>
@@ -514,7 +513,7 @@ class EmailService {
           </div>
           <div class="content">
             <p>Dear ${data.customerName},</p>
-            <p>Thank you for signing up for ${data.siteName}!</p>
+            <p>Thank you for signing up for NoCodea!</p>
             <p>Please verify your email address by clicking the button below:</p>
             <p style="text-align: center;">
               <a href="${data.verificationUrl}" class="button">Verify Email</a>
@@ -523,7 +522,7 @@ class EmailService {
             <p>If you have any questions, please contact us at ${data.supportEmail}</p>
           </div>
           <div class="footer">
-            <p>&copy; 2024 ${data.siteName}. All rights reserved.</p>
+            <p>&copy; 2024 NoCodea. All rights reserved.</p>
           </div>
         </div>
       </body>
@@ -556,7 +555,7 @@ class EmailService {
             ${data.newsletterContent}
           </div>
           <div class="footer">
-            <p>&copy; 2024 ${data.siteName}. All rights reserved.</p>
+            <p>&copy; 2024 NoCodea. All rights reserved.</p>
             <p class="unsubscribe">
               <a href="${data.unsubscribeUrl}">Unsubscribe</a> from this newsletter
             </p>

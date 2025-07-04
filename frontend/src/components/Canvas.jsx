@@ -11,7 +11,7 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
       // Layout Components
       case 'container':
         return (
-          <div className="w-full p-4 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 min-h-[100px]">
+          <div className="w-full p-4 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 min-h-[100px]" style={element.styles}>
             <div className="text-center text-gray-500">
               <p className="text-sm">Container</p>
               <p className="text-xs">Drop content here</p>
@@ -21,7 +21,7 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
       
       case 'row':
         return (
-          <div className="w-full flex gap-4 p-4 border-2 border-dashed border-blue-300 rounded-lg bg-blue-50 min-h-[80px]">
+          <div className="w-full flex gap-4 p-4 border-2 border-dashed border-blue-300 rounded-lg bg-blue-50 min-h-[80px]" style={element.styles}>
             <div className="flex-1 text-center text-blue-500">
               <p className="text-sm">Column 1</p>
             </div>
@@ -33,7 +33,7 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
       
       case 'column':
         return (
-          <div className="w-full p-4 border-2 border-dashed border-green-300 rounded-lg bg-green-50 min-h-[80px]">
+          <div className="w-full p-4 border-2 border-dashed border-green-300 rounded-lg bg-green-50 min-h-[80px]" style={element.styles}>
             <div className="text-center text-green-500">
               <p className="text-sm">Column</p>
               <p className="text-xs">Drop content here</p>
@@ -43,7 +43,7 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
       
       case 'section':
         return (
-          <div className="w-full p-8 border-2 border-dashed border-purple-300 rounded-lg bg-purple-50 min-h-[120px]">
+          <div className="w-full p-8 border-2 border-dashed border-purple-300 rounded-lg bg-purple-50 min-h-[120px]" style={element.styles}>
             <div className="text-center text-purple-500">
               <p className="text-sm">Section</p>
               <p className="text-xs">Page section with spacing</p>
@@ -69,7 +69,7 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
       case 'heading':
         return (
           <div className="space-y-2">
-            <h2 className="text-3xl font-bold text-gray-900">
+            <h2 className="text-3xl font-bold text-gray-900" style={element.styles}>
               {element.content || 'Your Heading Here'}
             </h2>
           </div>
@@ -78,7 +78,7 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
       case 'paragraph':
         return (
           <div className="space-y-2">
-            <p className="text-lg text-gray-700 leading-relaxed">
+            <p className="text-lg text-gray-700 leading-relaxed" style={element.styles}>
               {element.content || 'This is a sample paragraph. You can edit this text to add your own content. Lorem ipsum dolor sit amet, consectetur adipiscing elit.'}
             </p>
           </div>
@@ -107,7 +107,7 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
       case 'button':
         return (
           <div className="space-y-2">
-            <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium">
+            <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium" style={element.styles}>
               {element.content || 'Click Me'}
             </button>
           </div>
@@ -116,7 +116,7 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
       case 'link':
         return (
           <div className="space-y-2">
-            <a href="#" className="text-blue-600 hover:text-blue-800 underline font-medium">
+            <a href="#" className="text-blue-600 hover:text-blue-800 underline font-medium" style={element.styles}>
               {element.content || 'Sample Link'}
             </a>
           </div>
@@ -125,7 +125,7 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
       // Media Components
       case 'gallery':
         return (
-          <div className="space-y-2">
+          <div className="space-y-2" style={element.styles}>
             <div className="grid grid-cols-3 gap-4">
               {[sampleGallery1, sampleGallery2, sampleGallery3].map((img, i) => (
                 <img key={i} src={img} alt={`Gallery ${i+1}`} className="h-24 w-full object-cover rounded-lg border-2 border-gray-300" />
@@ -136,7 +136,7 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
 
       case 'carousel':
         return (
-          <div className="space-y-2">
+          <div className="space-y-2" style={element.styles}>
             <div className="w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300">
               <div className="text-center text-gray-500">
                 <div className="text-4xl mb-2">🎠</div>
@@ -149,7 +149,7 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
 
       case 'map':
         return (
-          <div className="space-y-2">
+          <div className="space-y-2" style={element.styles}>
             <div className="w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300">
               <div className="text-center text-gray-500">
                 <div className="text-4xl mb-2">🗺️</div>
@@ -162,7 +162,7 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
 
       case 'social':
         return (
-          <div className="space-y-2">
+          <div className="space-y-2" style={element.styles}>
             <div className="flex space-x-4">
               {['Facebook', 'Twitter', 'Instagram', 'LinkedIn'].map((platform) => (
                 <div key={platform} className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
@@ -176,7 +176,7 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
       // Advanced Components
       case 'navbar':
         return (
-          <div className="space-y-2">
+          <div className="space-y-2" style={element.styles}>
             <nav className="bg-white shadow-sm border border-gray-200 rounded-lg p-4">
               <div className="flex items-center justify-between">
                 <div className="text-lg font-bold text-gray-900">Logo</div>
@@ -192,7 +192,7 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
 
       case 'footer':
         return (
-          <div className="space-y-2">
+          <div className="space-y-2" style={element.styles}>
             <footer className="bg-gray-800 text-white p-6 rounded-lg">
               <div className="text-center">
                 <p className="text-sm">© 2024 Your Company. All rights reserved.</p>
@@ -204,7 +204,7 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
       case 'sidebar':
         return (
           <div className="space-y-2">
-            <div className="w-64 bg-gray-100 p-4 rounded-lg border border-gray-200">
+            <div className="w-64 bg-gray-100 p-4 rounded-lg border border-gray-200" style={element.styles}>
               <div className="space-y-2">
                 <div className="text-sm font-medium text-gray-900">Sidebar</div>
                 <div className="space-y-1">
@@ -220,7 +220,7 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
       case 'card':
         return (
           <div className="space-y-2">
-            <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+            <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm" style={element.styles}>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Card Title</h3>
               <p className="text-gray-600 mb-4">This is a sample card component with some content.</p>
               <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm">
@@ -233,7 +233,7 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
       case 'testimonial':
         return (
           <div className="space-y-2">
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-6" style={element.styles}>
               <div className="flex items-center mb-4">
                 <div className="w-12 h-12 bg-gray-300 rounded-full mr-4"></div>
                 <div>
@@ -249,7 +249,7 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
       case 'pricing':
         return (
           <div className="space-y-2">
-            <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+            <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm" style={element.styles}>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">Basic Plan</h3>
               <div className="text-3xl font-bold text-gray-900 mb-4">$9<span className="text-lg text-gray-500">/month</span></div>
               <ul className="space-y-2 mb-6">
@@ -303,11 +303,13 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
       case 'select':
         return (
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
+            <label htmlFor={`canvas-select-${element.id}`} className="block text-sm font-medium text-gray-700">
               {element.label || 'Label'}
               {element.required && <span className="text-red-500 ml-1">*</span>}
             </label>
             <select 
+              id={`canvas-select-${element.id}`}
+              name={`canvasSelect-${element.id}`}
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" 
               disabled={!isPreviewMode}
             >
@@ -326,10 +328,12 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
           <div className="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200">
             <input
               type="checkbox"
+              id={`canvas-checkbox-${element.id}`}
+              name={`canvasCheckbox-${element.id}`}
               disabled={!isPreviewMode}
               className="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded transition-all duration-200"
             />
-            <label className="text-sm font-medium text-gray-700 cursor-pointer">
+            <label htmlFor={`canvas-checkbox-${element.id}`} className="text-sm font-medium text-gray-700 cursor-pointer">
               {element.label || 'Checkbox'}
               {element.required && <span className="text-red-500 ml-1">*</span>}
             </label>
@@ -341,10 +345,12 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
           <div className="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200">
             <input
               type="radio"
+              id={`canvas-radio-${element.id}`}
+              name={`canvasRadio-${element.id}`}
               disabled={!isPreviewMode}
               className="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 transition-all duration-200"
             />
-            <label className="text-sm font-medium text-gray-700 cursor-pointer">
+            <label htmlFor={`canvas-radio-${element.id}`} className="text-sm font-medium text-gray-700 cursor-pointer">
               {element.label || 'Radio Option'}
               {element.required && <span className="text-red-500 ml-1">*</span>}
             </label>
@@ -384,7 +390,7 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
       // Add new component types below:
       case 'audio':
         return (
-          <div className="space-y-2">
+          <div className="space-y-2" style={element.styles}>
             <audio controls className="w-full">
               <source src={element.src || ''} type="audio/mpeg" />
               Your browser does not support the audio element.
@@ -393,7 +399,7 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
         );
       case 'embed':
         return (
-          <div className="space-y-2">
+          <div className="space-y-2" style={element.styles}>
             <div className="w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300">
               <span className="text-gray-500 text-sm">Embed Placeholder</span>
             </div>
@@ -401,7 +407,7 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
         );
       case 'tabs':
         return (
-          <div className="space-y-2">
+          <div className="space-y-2" style={element.styles}>
             <div className="flex space-x-2 mb-2">
               <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded">Tab 1</button>
               <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded">Tab 2</button>
@@ -411,7 +417,7 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
         );
       case 'accordion':
         return (
-          <div className="space-y-2">
+          <div className="space-y-2" style={element.styles}>
             <div className="border rounded">
               <button className="w-full text-left px-4 py-2 bg-gray-100 font-medium">Accordion Title</button>
               <div className="p-4">Accordion content here</div>
@@ -420,7 +426,7 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
         );
       case 'faq':
         return (
-          <div className="space-y-2">
+          <div className="space-y-2" style={element.styles}>
             <div className="border rounded p-4 bg-gray-50">
               <div className="font-semibold">Q: Sample question?</div>
               <div className="text-gray-600">A: Sample answer goes here.</div>
@@ -429,7 +435,7 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
         );
       case 'team':
         return (
-          <div className="space-y-2">
+          <div className="space-y-2" style={element.styles}>
             <div className="flex space-x-4">
               <div className="flex flex-col items-center">
                 <div className="w-16 h-16 bg-gray-300 rounded-full mb-2"></div>
@@ -446,7 +452,7 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
         );
       case 'stats':
         return (
-          <div className="flex space-x-8">
+          <div className="flex space-x-8" style={element.styles}>
             <div className="text-center">
               <div className="text-2xl font-bold">123</div>
               <div className="text-xs text-gray-500">Users</div>
@@ -590,37 +596,37 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
         );
       case 'widget':
         return (
-          <div className="w-full p-2 border border-gray-300 rounded bg-gray-50">
+          <div className="w-full p-2 border border-gray-300 rounded bg-gray-50" style={element.styles}>
             <span className="text-xs text-gray-700">Widget Placeholder</span>
           </div>
         );
       case 'api':
         return (
-          <div className="w-full p-2 border border-gray-300 rounded bg-gray-50">
+          <div className="w-full p-2 border border-gray-300 rounded bg-gray-50" style={element.styles}>
             <span className="text-xs text-gray-700">API Data Placeholder</span>
           </div>
         );
       case 'chart':
         return (
-          <div className="w-full h-32 flex items-center justify-center border border-gray-300 rounded bg-gray-50">
+          <div className="w-full h-32 flex items-center justify-center border border-gray-300 rounded bg-gray-50" style={element.styles}>
             <span className="text-xs text-gray-700">Chart Placeholder</span>
           </div>
         );
       case 'calendar':
         return (
-          <div className="w-full h-32 flex items-center justify-center border border-gray-300 rounded bg-gray-50">
+          <div className="w-full h-32 flex items-center justify-center border border-gray-300 rounded bg-gray-50" style={element.styles}>
             <span className="text-xs text-gray-700">Calendar Placeholder</span>
           </div>
         );
       case 'slider':
         return (
-          <div className="w-full h-32 flex items-center justify-center border border-gray-300 rounded bg-gray-50">
+          <div className="w-full h-32 flex items-center justify-center border border-gray-300 rounded bg-gray-50" style={element.styles}>
             <span className="text-xs text-gray-700">Slider Placeholder</span>
           </div>
         );
       case 'lightbox':
         return (
-          <div className="w-full h-32 flex items-center justify-center border border-gray-300 rounded bg-gray-50">
+          <div className="w-full h-32 flex items-center justify-center border border-gray-300 rounded bg-gray-50" style={element.styles}>
             <span className="text-xs text-gray-700">Lightbox Placeholder</span>
           </div>
         );
@@ -676,7 +682,7 @@ const FormElement = ({ element, isSelected, onClick, onDelete, isPreviewMode }) 
   );
 };
 
-const Canvas = ({ formElements, setFormElements, selectedElement, setSelectedElement, isPreviewMode = false }) => {
+const Canvas = ({ formElements, setFormElements, selectedElement, setSelectedElement, isPreviewMode = false, canvasBackground }) => {
   const [{ isOver }, drop] = useDrop({
     accept: 'FORM_COMPONENT',
     drop: (item, monitor) => {
@@ -715,8 +721,16 @@ const Canvas = ({ formElements, setFormElements, selectedElement, setSelectedEle
     }
   };
 
+  // Use the provided background or default gradient
+  const canvasStyle = {
+    background: canvasBackground || 'linear-gradient(to bottom right, #f9fafb, #f3f4f6)',
+    padding: '1.5rem',
+    overflowY: 'auto',
+    flex: 1
+  };
+
   return (
-    <div className="flex-1 bg-gradient-to-br from-gray-50 to-gray-100 p-6 overflow-y-auto">
+    <div style={canvasStyle}>
       <div className="max-w-6xl mx-auto">
         <div
           ref={drop}

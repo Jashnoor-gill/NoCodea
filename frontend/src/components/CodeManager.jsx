@@ -93,48 +93,6 @@ const CodeManager = ({ formElements, onClose, onApplyCode }) => {
         case 'card':
           html += `  <div class="card"${styleAttr}${className}${id}>\n    <h3>Card Title</h3>\n    <p>Card content goes here.</p>\n    <button>Learn More</button>\n  </div>\n`;
           break;
-        case 'text':
-        case 'email':
-        case 'number':
-        case 'url':
-          html += `  <div class="form-group">\n`;
-          html += `    <label for="${element.id}">${element.label || 'Label'}</label>\n`;
-          html += `    <input type="${element.type}" id="${element.id}" placeholder="${element.placeholder || ''}"${element.required ? ' required' : ''}${styleAttr}${className}>\n`;
-          html += `  </div>\n`;
-          break;
-        case 'textarea':
-          html += `  <div class="form-group">\n`;
-          html += `    <label for="${element.id}">${element.label || 'Label'}</label>\n`;
-          html += `    <textarea id="${element.id}" placeholder="${element.placeholder || ''}"${element.required ? ' required' : ''}${styleAttr}${className}></textarea>\n`;
-          html += `  </div>\n`;
-          break;
-        case 'select':
-          html += `  <div class="form-group">\n`;
-          html += `    <label for="${element.id}">${element.label || 'Label'}</label>\n`;
-          html += `    <select id="${element.id}"${element.required ? ' required' : ''}${styleAttr}${className}>\n`;
-          html += `      <option value="">${element.placeholder || 'Select an option'}</option>\n`;
-          element.options?.forEach(option => {
-            html += `      <option value="${option}">${option}</option>\n`;
-          });
-          html += `    </select>\n`;
-          html += `  </div>\n`;
-          break;
-        case 'checkbox':
-          html += `  <div class="form-group">\n`;
-          html += `    <label class="checkbox-label">\n`;
-          html += `      <input type="checkbox"${element.required ? ' required' : ''}${styleAttr}${className}>\n`;
-          html += `      <span>${element.label || 'Checkbox'}</span>\n`;
-          html += `    </label>\n`;
-          html += `  </div>\n`;
-          break;
-        case 'radio':
-          html += `  <div class="form-group">\n`;
-          html += `    <label class="radio-label">\n`;
-          html += `      <input type="radio"${element.required ? ' required' : ''}${styleAttr}${className}>\n`;
-          html += `      <span>${element.label || 'Radio Option'}</span>\n`;
-          html += `    </label>\n`;
-          html += `  </div>\n`;
-          break;
         default:
           html += `  <!-- ${element.type} element -->\n`;
       }

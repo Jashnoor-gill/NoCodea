@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import axios from 'axios';
@@ -44,6 +44,20 @@ import AssetManager from './components/AssetManager';
 import CodeManager from './components/CodeManager';
 import DeviceManager from './components/DeviceManager';
 import CommandManager from './components/CommandManager';
+import AdminDashboard from './components/admin/AdminDashboard';
+import PostManager from './components/admin/PostManager';
+import CategoryManager from './components/admin/CategoryManager';
+import LoginForm from './components/auth/LoginForm';
+import RegisterForm from './components/auth/RegisterForm';
+import UserManager from './components/admin/UserManager';
+import RequireAdmin from './components/admin/RequireAdmin';
+import DefaultThemeProvider from './themes/default/ThemeProvider.jsx';
+// import OtherThemeProvider from './themes/other/ThemeProvider.jsx'; // add more as needed
+
+const themeMap = {
+  default: DefaultThemeProvider,
+  // other: OtherThemeProvider,
+};
 
 function AppContent() {
   const { t } = useTranslation();
@@ -57,6 +71,7 @@ function AppContent() {
   const [showTemplates, setShowTemplates] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showOpeningAnimation, setShowOpeningAnimation] = useState(true);
+  const [canvasBackground, setCanvasBackground] = useState('');
 
   // New GrapesJS-style features state
   const [showAssetManager, setShowAssetManager] = useState(false);
@@ -213,6 +228,7 @@ function AppContent() {
     if (savedData) {
       const websiteData = JSON.parse(savedData);
       setFormElements(websiteData.elements || []);
+      setCanvasBackground(websiteData.canvasBackground || '');
       toast.success(t('websiteLoadedSuccess'));
     } else {
       toast.info(t('noSavedWebsite'));
@@ -231,6 +247,7 @@ function AppContent() {
     const websiteData = {
       title: currentProject?.name || 'My Website',
       elements: formElements,
+      canvasBackground,
       exportDate: new Date().toISOString(),
       version: '1.0'
     };
@@ -255,6 +272,7 @@ function AppContent() {
         try {
           const websiteData = JSON.parse(e.target.result);
           setFormElements(websiteData.elements || []);
+          setCanvasBackground(websiteData.canvasBackground || '');
           setSelectedElement(null);
           addToHistory(websiteData.elements || []);
           toast.success(t('websiteImportedSuccess'));
@@ -455,7 +473,7 @@ function AppContent() {
               </div>
             ) : (
               <DndProvider backend={HTML5Backend}>
-                <div className="App h-screen flex flex-col bg-gray-50 w-full">
+                <div className="App h-screen flex flex-col bg-gray-50 w-full overflow-auto" style={{ height: '100vh', margin: 0, padding: 0 }}>
                   {/* Header */}
                   <header className="bg-white border-b border-gray-200 shadow-sm w-full">
                     <div className="w-full px-4 sm:px-6 lg:px-8">
@@ -549,7 +567,7 @@ function AppContent() {
                       />
                       
                       <div 
-                        className="flex-1 overflow-auto p-6 w-full"
+                        className="flex-1 overflow-auto w-full"
                         style={{
                           transform: `scale(${zoom / 100})`,
                           transformOrigin: 'top left',
@@ -674,6 +692,12 @@ function AppContent() {
           <Route path="/returns" element={<ReturnForm />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/templates" element={<TemplateManager />} />
+          <Route path="/admin" element={<RequireAdmin><AdminDashboard /></RequireAdmin>} />
+          <Route path="/admin/posts" element={<RequireAdmin><PostManager /></RequireAdmin>} />
+          <Route path="/admin/categories" element={<RequireAdmin><CategoryManager /></RequireAdmin>} />
+          <Route path="/admin/users" element={<RequireAdmin><UserManager /></RequireAdmin>} />
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/register" element={<RegisterForm />} />
         </Routes>
       )}
     </>
@@ -681,14 +705,35 @@ function AppContent() {
 }
 
 function App() {
+  const [ThemeProvider, setThemeProvider] = useState(() => themeMap['default']);
+
+  useEffect(() => {
+    const activeTheme = 'default'; // or from config
+    setThemeProvider(() => themeMap[activeTheme] || DefaultThemeProvider);
+  }, []);
+
+  if (!ThemeProvider) return <div>Loading theme...</div>;
+
   return (
-    <AuthProvider>
-      <SiteSettingsProvider>
-        <AdminMenuProvider>
-          <AppContent />
-        </AdminMenuProvider>
-      </SiteSettingsProvider>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <SiteSettingsProvider>
+          <AdminMenuProvider>
+            <Router>
+              <Routes>
+                <Route path="/" element={<AppContent />} />
+                <Route path="/admin" element={<RequireAdmin><AdminDashboard /></RequireAdmin>} />
+                <Route path="/admin/posts" element={<RequireAdmin><PostManager /></RequireAdmin>} />
+                <Route path="/admin/categories" element={<RequireAdmin><CategoryManager /></RequireAdmin>} />
+                <Route path="/admin/users" element={<RequireAdmin><UserManager /></RequireAdmin>} />
+                <Route path="/login" element={<LoginForm />} />
+                <Route path="/register" element={<RegisterForm />} />
+              </Routes>
+            </Router>
+          </AdminMenuProvider>
+        </SiteSettingsProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

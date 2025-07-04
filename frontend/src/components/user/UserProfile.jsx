@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
+import Modal from '../Modal';
 
 const UserProfile = () => {
   const { t } = useTranslation();
@@ -25,6 +26,11 @@ const UserProfile = () => {
     }
   });
   const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [changingPassword, setChangingPassword] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -132,14 +138,58 @@ const UserProfile = () => {
   };
 
   const handlePasswordChange = () => {
-    // TODO: Implement password change functionality
-    toast.info(t('passwordChangeNotImplemented'));
+    setShowPasswordModal(true);
   };
 
-  const handleDeleteAccount = () => {
+  const handlePasswordSubmit = async (e) => {
+    e.preventDefault();
+    setChangingPassword(true);
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch('/api/users/change-password', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ oldPassword, newPassword })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success(t('passwordChangeSuccess'));
+        setShowPasswordModal(false);
+        setOldPassword('');
+        setNewPassword('');
+      } else {
+        toast.error(data.message || t('passwordChangeFailed'));
+      }
+    } catch (error) {
+      toast.error(t('passwordChangeFailed'));
+    } finally {
+      setChangingPassword(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
     if (window.confirm(t('confirmDeleteAccount'))) {
-      // TODO: Implement account deletion
-      toast.info(t('accountDeletionNotImplemented'));
+      try {
+        const token = localStorage.getItem('token');
+        const res = await fetch('/api/users/me', {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (res.ok) {
+          toast.success(t('accountDeletedSuccess'));
+          localStorage.removeItem('token');
+          navigate('/');
+          window.location.reload();
+        } else {
+          const data = await res.json();
+          toast.error(data.message || t('accountDeletionFailed'));
+        }
+      } catch (error) {
+        toast.error(t('accountDeletionFailed'));
+      }
     }
   };
 
@@ -179,10 +229,11 @@ const UserProfile = () => {
                 {/* Basic Information */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="profile-name" className="block text-sm font-medium text-gray-700 mb-1">
                       {t('fullName')} *
                     </label>
                     <input
+                      id="profile-name"
                       type="text"
                       name="name"
                       value={profile.name}
@@ -199,10 +250,11 @@ const UserProfile = () => {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="profile-email" className="block text-sm font-medium text-gray-700 mb-1">
                       {t('email')} *
                     </label>
                     <input
+                      id="profile-email"
                       type="email"
                       name="email"
                       value={profile.email}
@@ -220,10 +272,11 @@ const UserProfile = () => {
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="profile-phone" className="block text-sm font-medium text-gray-700 mb-1">
                     {t('phone')}
                   </label>
                   <input
+                    id="profile-phone"
                     type="tel"
                     name="phone"
                     value={profile.phone}
@@ -245,10 +298,11 @@ const UserProfile = () => {
                   
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label htmlFor="profile-language" className="block text-sm font-medium text-gray-700 mb-1">
                         {t('language')}
                       </label>
                       <select
+                        id="profile-language"
                         name="preferences.language"
                         value={profile.preferences.language}
                         onChange={handleInputChange}
@@ -263,10 +317,11 @@ const UserProfile = () => {
                     </div>
                     
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label htmlFor="profile-currency" className="block text-sm font-medium text-gray-700 mb-1">
                         {t('currency')}
                       </label>
                       <select
+                        id="profile-currency"
                         name="preferences.currency"
                         value={profile.preferences.currency}
                         onChange={handleInputChange}
@@ -281,10 +336,11 @@ const UserProfile = () => {
                     </div>
                     
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label htmlFor="profile-timezone" className="block text-sm font-medium text-gray-700 mb-1">
                         {t('timezone')}
                       </label>
                       <select
+                        id="profile-timezone"
                         name="preferences.timezone"
                         value={profile.preferences.timezone}
                         onChange={handleInputChange}
@@ -304,8 +360,9 @@ const UserProfile = () => {
                   <div className="mt-4">
                     <h4 className="text-sm font-medium text-gray-700 mb-3">{t('notifications')}</h4>
                     <div className="space-y-2">
-                      <label className="flex items-center">
+                      <label htmlFor="profile-notifications-email" className="flex items-center">
                         <input
+                          id="profile-notifications-email"
                           type="checkbox"
                           name="notifications.email"
                           checked={profile.preferences.notifications.email}
@@ -316,8 +373,9 @@ const UserProfile = () => {
                         <span className="ml-2 text-sm text-gray-700">{t('emailNotifications')}</span>
                       </label>
                       
-                      <label className="flex items-center">
+                      <label htmlFor="profile-notifications-push" className="flex items-center">
                         <input
+                          id="profile-notifications-push"
                           type="checkbox"
                           name="notifications.push"
                           checked={profile.preferences.notifications.push}
@@ -421,6 +479,42 @@ const UserProfile = () => {
           </div>
         </div>
       </div>
+
+      {/* Password Change Modal */}
+      {showPasswordModal && (
+        <Modal onClose={() => setShowPasswordModal(false)}>
+          <form onSubmit={handlePasswordSubmit} className="space-y-4 p-6">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">{t('changePassword')}</h3>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('oldPassword')}</label>
+              <input
+                type="password"
+                value={oldPassword}
+                onChange={e => setOldPassword(e.target.value)}
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('newPassword')}</label>
+              <input
+                type="password"
+                value={newPassword}
+                onChange={e => setNewPassword(e.target.value)}
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+                minLength={6}
+              />
+            </div>
+            <div className="flex justify-end gap-2">
+              <button type="button" onClick={() => setShowPasswordModal(false)} className="px-4 py-2 bg-gray-200 rounded">{t('cancel')}</button>
+              <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded" disabled={changingPassword}>
+                {changingPassword ? t('saving') : t('saveChanges')}
+              </button>
+            </div>
+          </form>
+        </Modal>
+      )}
     </div>
   );
 };

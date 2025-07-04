@@ -7,6 +7,7 @@ import {
   StopIcon,
   ArrowPathIcon
 } from '@heroicons/react/24/outline';
+import ColorPicker from './ColorPicker';
 
 const Editor = ({ onCodeChange, initialCode = '' }) => {
   const [htmlCode, setHtmlCode] = useState(initialCode || '');
@@ -17,6 +18,7 @@ const Editor = ({ onCodeChange, initialCode = '' }) => {
   const [language, setLanguage] = useState('html');
   const [theme, setTheme] = useState('dark');
   const iframeRef = useRef(null);
+  const [canvasBackground, setCanvasBackground] = useState('');
 
   useEffect(() => {
     if (onCodeChange) {
@@ -281,6 +283,11 @@ const Editor = ({ onCodeChange, initialCode = '' }) => {
         <div className="text-sm text-gray-500">
           {theme === 'dark' ? 'Dark Theme' : 'Light Theme'}
         </div>
+      </div>
+
+      <div className="flex items-center gap-4 p-2 bg-white border-b border-gray-200">
+        <label className="text-sm font-medium text-gray-700">Canvas Background:</label>
+        <ColorPicker value={canvasBackground} onChange={setCanvasBackground} />
       </div>
     </div>
   );

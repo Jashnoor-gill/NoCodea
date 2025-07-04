@@ -8,6 +8,8 @@ const rateLimit = require('express-rate-limit');
 const fs = require('fs').promises;
 const path = require('path');
 const replacePlaceholders = require('./utils/replacePlaceholders');
+const loadPlugins = require('./utils/pluginLoader');
+const loadThemes = require('./utils/themeLoader');
 require('dotenv').config();
 
 const app = express();
@@ -32,7 +34,7 @@ const productRoutes = require('./routes/products');
 const vendorRoutes = require('./routes/vendors');
 const adminRoutes = require('./routes/admin');
 const cartRoutes = require('./routes/cart');
-const commentRoutes = require('./routes/comments');
+const commentRoutes = require('./routes/comment');
 const languageRoutes = require('./routes/languages');
 const menuRoutes = require('./routes/menus');
 const reviewRoutes = require('./routes/reviews');
@@ -47,6 +49,8 @@ const feedRoutes = require('./routes/feed');
 const emailRoutes = require('./routes/emails');
 const returnRoutes = require('./routes/returns');
 const wishlistRoutes = require('./routes/wishlist');
+const contentRoutes = require('./routes/content');
+const categoryRoutes = require('./routes/category');
 
 // Security middleware
 app.use(helmet());
@@ -138,6 +142,8 @@ app.use('/api/tags', tagRoutes);
 app.use('/api/emails', emailRoutes);
 app.use('/api/returns', returnRoutes);
 app.use('/api/wishlist', wishlistRoutes);
+app.use('/api/content', contentRoutes);
+app.use('/api/category', categoryRoutes);
 
 // Feed routes (public endpoints)
 app.use('/feed', feedRoutes);
@@ -229,5 +235,9 @@ const startServer = async () => {
 };
 
 startServer();
+
+// After initializing the Express app (assuming 'app' is your Express instance):
+loadPlugins(app);
+loadThemes(app);
 
 module.exports = app; 
